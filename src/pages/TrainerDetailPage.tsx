@@ -9,14 +9,6 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Calendar } from '@/components/ui/calendar';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
   Star,
   MapPin,
   CheckCircle,
@@ -32,6 +24,8 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { PaymentMethodSelector, type PaymentMethod } from '@/components/payments/PaymentMethodSelector';
+import { useExchangeRates, formatKES, convertToKES } from '@/hooks/useExchangeRates';
 
 // Mock trainer data - would come from database
 const mockTrainer = {
@@ -94,13 +88,19 @@ const timeSlots = [
 export default function TrainerDetailPage() {
   const { id } = useParams();
   const { isConnected, address } = useAccount();
+  const { data: rates } = useExchangeRates();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [sessionType, setSessionType] = useState<'in-person' | 'virtual'>('in-person');
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('AVAX');
   const [isBooking, setIsBooking] = useState(false);
 
   const trainer = mockTrainer; // Would fetch by ID
+  
+  // Calculate amounts based on payment method
+  const avaxAmount = trainer.hourlyRate;
+  const usdcAmount = rates ? (avaxAmount * rates.avaxToUsd) / rates.usdcToUsd : avaxAmount * 35;
+  const kesAmount = rates ? convertToKES(avaxAmount, 'AVAX', rates) : 0;
 
   const handleBook = async () => {
     if (!selectedDate || !selectedTime) {
@@ -108,26 +108,32 @@ export default function TrainerDetailPage() {
       return;
     }
 
+    if (paymentMethod === 'MPESA') {
+      toast.error('M-Pesa payments coming soon!');
+      return;
+    }
+
     setIsBooking(true);
 
-    // Simulate blockchain transaction
     try {
-      // Would call smart contract here:
-      // const tx = await bookingEscrow.createBooking(
-      //   trainer.walletAddress,
-      //   sessionTimestamp,
-      //   sessionType,
-      //   { value: parseEther(trainer.hourlyRate.toString()) }
-      // );
-      // await tx.wait();
+      // Would call smart contract here based on payment method:
+      // if (paymentMethod === 'AVAX') {
+      //   const tx = await bookingEscrow.createBooking(..., { value: parseEther(avaxAmount) });
+      // } else if (paymentMethod === 'USDC') {
+      //   await usdc.approve(bookingEscrowAddress, parseUSDC(usdcAmount));
+      //   const tx = await bookingEscrow.createBookingWithToken(usdc, ...);
+      // }
 
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
+      const displayAmount = paymentMethod === 'AVAX' 
+        ? `${avaxAmount} AVAX` 
+        : `${usdcAmount.toFixed(2)} USDC`;
+
       toast.success('Booking confirmed!', {
-        description: `Session with ${trainer.name} on ${format(selectedDate, 'PPP')} at ${selectedTime}`,
+        description: `Session with ${trainer.name} on ${format(selectedDate, 'PPP')} at ${selectedTime}. Paid ${displayAmount}`,
       });
 
-      setIsBookingOpen(false);
       setSelectedDate(undefined);
       setSelectedTime(null);
     } catch (error) {
@@ -304,14 +310,23 @@ export default function TrainerDetailPage() {
             >
               <Card className="gradient-card border-border/50">
                 <CardHeader>
-                  <CardTitle className="font-display flex items-center justify-between">
-                    <span>Book Session</span>
-                    <span className="gradient-text">
-                      {trainer.hourlyRate} AVAX
-                      <span className="text-sm font-normal text-muted-foreground">
-                        /hr
+                  <CardTitle className="font-display">
+                    <div className="flex items-center justify-between">
+                      <span>Book Session</span>
+                    </div>
+                    <div className="flex flex-col items-end mt-1">
+                      <span className="gradient-text text-xl">
+                        {trainer.hourlyRate} AVAX
+                        <span className="text-sm font-normal text-muted-foreground">
+                          /hr
+                        </span>
                       </span>
-                    </span>
+                      {rates && (
+                        <span className="text-xs font-normal text-muted-foreground">
+                          ≈ {formatKES(kesAmount)}
+                        </span>
+                      )}
+                    </div>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -369,6 +384,16 @@ export default function TrainerDetailPage() {
                     </div>
                   )}
 
+                  {/* Payment Method Selector */}
+                  {selectedDate && selectedTime && rates && (
+                    <PaymentMethodSelector
+                      selected={paymentMethod}
+                      onSelect={setPaymentMethod}
+                      amount={avaxAmount}
+                      rates={rates}
+                    />
+                  )}
+
                   {/* Summary */}
                   {selectedDate && selectedTime && (
                     <div className="p-4 rounded-xl bg-muted/50 space-y-2">
@@ -386,9 +411,26 @@ export default function TrainerDetailPage() {
                         <span className="text-muted-foreground">Type</span>
                         <span className="font-medium capitalize">{sessionType}</span>
                       </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Payment</span>
+                        <span className="font-medium">{paymentMethod}</span>
+                      </div>
                       <div className="flex justify-between text-sm pt-2 border-t border-border/50">
                         <span className="text-muted-foreground">Total</span>
-                        <span className="font-bold">{trainer.hourlyRate} AVAX</span>
+                        <div className="text-right">
+                          <span className="font-bold">
+                            {paymentMethod === 'AVAX' 
+                              ? `${avaxAmount} AVAX` 
+                              : paymentMethod === 'USDC'
+                              ? `${usdcAmount.toFixed(2)} USDC`
+                              : formatKES(kesAmount)}
+                          </span>
+                          {rates && paymentMethod !== 'MPESA' && (
+                            <span className="block text-xs text-muted-foreground">
+                              ≈ {formatKES(kesAmount)}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   )}
@@ -399,15 +441,17 @@ export default function TrainerDetailPage() {
                       variant="hero"
                       size="lg"
                       className="w-full"
-                      disabled={!selectedDate || !selectedTime || isBooking}
+                      disabled={!selectedDate || !selectedTime || isBooking || paymentMethod === 'MPESA'}
                       onClick={handleBook}
                     >
                       {isBooking ? (
                         'Confirming...'
+                      ) : paymentMethod === 'MPESA' ? (
+                        'M-Pesa Coming Soon'
                       ) : (
                         <>
                           <Wallet className="w-4 h-4" />
-                          Pay {trainer.hourlyRate} AVAX
+                          Pay with {paymentMethod}
                         </>
                       )}
                     </Button>
