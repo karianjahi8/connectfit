@@ -21,6 +21,7 @@ import {
   ArrowLeft,
   Wallet,
   ExternalLink,
+  Copy,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
@@ -230,6 +231,33 @@ export default function TrainerDetailPage() {
                         </Badge>
                       ))}
                     </div>
+                  </div>
+
+                  {/* Wallet Address Display */}
+                  <div className="mt-4 p-4 rounded-xl bg-muted/30 border border-border/50">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Wallet className="w-4 h-4 text-primary" />
+                      <span className="text-sm font-medium">Payment Wallet (Avalanche C-Chain)</span>
+                    </div>
+                    <div className="flex items-center justify-between gap-2 p-3 rounded-lg bg-background/50 border border-border/30">
+                      <code className="text-xs text-muted-foreground font-mono truncate flex-1">
+                        {trainer.walletAddress}
+                      </code>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="shrink-0 h-8 px-2"
+                        onClick={() => {
+                          navigator.clipboard.writeText(trainer.walletAddress);
+                          toast.success('Wallet address copied!');
+                        }}
+                      >
+                        <Copy className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Accepts AVAX & USDC on Avalanche C-Chain
+                    </p>
                   </div>
 
                   {trainer.isVerified && trainer.certificationHash && (
