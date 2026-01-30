@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useExchangeRates, formatKES, convertToKES } from '@/hooks/useExchangeRates';
 
 interface Trainer {
   id: string;
@@ -24,6 +25,9 @@ interface TrainerCardProps {
 }
 
 export function TrainerCard({ trainer }: TrainerCardProps) {
+  const { data: rates } = useExchangeRates();
+  const kesAmount = rates ? convertToKES(trainer.hourlyRate, 'AVAX', rates) : 0;
+
   return (
     <Card className="group h-full gradient-card border-border/50 hover:shadow-medium hover:border-primary/20 transition-all duration-300">
       <CardContent className="p-6">
@@ -88,12 +92,19 @@ export function TrainerCard({ trainer }: TrainerCardProps) {
         </div>
 
         <div className="flex items-center justify-between pt-4 border-t border-border/50">
-          <div className="flex items-center gap-1">
-            <Clock className="w-4 h-4 text-muted-foreground" />
-            <span className="font-display font-bold text-lg">
-              {trainer.hourlyRate} AVAX
-            </span>
-            <span className="text-sm text-muted-foreground">/hr</span>
+          <div className="flex flex-col">
+            <div className="flex items-center gap-1">
+              <Clock className="w-4 h-4 text-muted-foreground" />
+              <span className="font-display font-bold text-lg">
+                {trainer.hourlyRate} AVAX
+              </span>
+              <span className="text-sm text-muted-foreground">/hr</span>
+            </div>
+            {rates && (
+              <span className="text-xs text-muted-foreground ml-5">
+                ≈ {formatKES(kesAmount)}
+              </span>
+            )}
           </div>
 
           <Link to={`/trainers/${trainer.id}`}>
