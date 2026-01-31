@@ -1,12 +1,21 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { avalanche, avalancheFuji } from 'wagmi/chains';
+import {
+  metaMaskWallet,
+  coreWallet,
+} from '@rainbow-me/rainbowkit/wallets';
 
 // Configure chains - Avalanche Fuji testnet for development
 export const config = getDefaultConfig({
   appName: 'FitConnect',
   projectId: 'fitconnect-demo', // Replace with actual WalletConnect project ID for production
   chains: [avalancheFuji, avalanche],
-  ssr: false,
+  wallets: [
+    {
+      groupName: 'Recommended',
+      wallets: [coreWallet, metaMaskWallet],
+    },
+  ],
 });
 
 // Contract addresses - deploy these via Hardhat and update

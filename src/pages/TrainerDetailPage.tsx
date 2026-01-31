@@ -35,7 +35,8 @@ const mockTrainer = {
   name: 'James Mwangi',
   bio: 'Certified personal trainer with 8 years of experience in strength training and HIIT. I specialize in helping clients achieve their fitness goals through personalized workout plans and nutrition guidance. My approach focuses on sustainable lifestyle changes that lead to long-term results.',
   specialties: ['Strength Training', 'HIIT', 'Weight Loss', 'Nutrition', 'Bodybuilding'],
-  hourlyRate: 0.05,
+  physicalRate: 0.05,
+  virtualRate: 0.03,
   location: 'Nairobi, Kenya',
   avatar: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=300&h=300&fit=crop&crop=face',
   rating: 4.8,
@@ -98,10 +99,13 @@ export default function TrainerDetailPage() {
 
   const trainer = mockTrainer; // Would fetch by ID
   
-  // Calculate amounts based on payment method
-  const avaxAmount = trainer.hourlyRate;
+  // Calculate amounts based on payment method and session type
+  const currentRate = sessionType === 'in-person' ? trainer.physicalRate : trainer.virtualRate;
+  const avaxAmount = currentRate;
   const usdcAmount = rates ? (avaxAmount * rates.avaxToUsd) / rates.usdcToUsd : avaxAmount * 35;
   const kesAmount = rates ? convertToKES(avaxAmount, 'AVAX', rates) : 0;
+  const physicalKes = rates ? convertToKES(trainer.physicalRate, 'AVAX', rates) : 0;
+  const virtualKes = rates ? convertToKES(trainer.virtualRate, 'AVAX', rates) : 0;
 
   const handleBook = async () => {
     if (!selectedDate || !selectedTime) {
@@ -342,18 +346,35 @@ export default function TrainerDetailPage() {
                     <div className="flex items-center justify-between">
                       <span>Book Session</span>
                     </div>
-                    <div className="flex flex-col items-end mt-1">
-                      <span className="gradient-text text-xl">
-                        {trainer.hourlyRate} AVAX
-                        <span className="text-sm font-normal text-muted-foreground">
-                          /hr
+                    <div className="grid grid-cols-2 gap-3 mt-3">
+                      <div className="p-2 rounded-lg bg-muted/30 text-center">
+                        <div className="text-xs text-muted-foreground flex items-center justify-center gap-1 mb-1">
+                          <Users className="w-3 h-3" />
+                          Physical
+                        </div>
+                        <span className="gradient-text font-bold">
+                          {trainer.physicalRate} AVAX
                         </span>
-                      </span>
-                      {rates && (
-                        <span className="text-xs font-normal text-muted-foreground">
-                          ≈ {formatKES(kesAmount)}
+                        {rates && (
+                          <p className="text-xs text-muted-foreground">
+                            ≈ {formatKES(physicalKes)}
+                          </p>
+                        )}
+                      </div>
+                      <div className="p-2 rounded-lg bg-muted/30 text-center">
+                        <div className="text-xs text-muted-foreground flex items-center justify-center gap-1 mb-1">
+                          <Video className="w-3 h-3" />
+                          Virtual
+                        </div>
+                        <span className="gradient-text font-bold">
+                          {trainer.virtualRate} AVAX
                         </span>
-                      )}
+                        {rates && (
+                          <p className="text-xs text-muted-foreground">
+                            ≈ {formatKES(virtualKes)}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </CardTitle>
                 </CardHeader>
