@@ -14,7 +14,8 @@ const mockTrainers = [
     name: 'James Mwangi',
     bio: 'Certified personal trainer with 8 years of experience in strength training and HIIT.',
     specialties: ['Strength Training', 'HIIT', 'Weight Loss'],
-    hourlyRate: 0.05, // AVAX
+    physicalRate: 0.05, // AVAX
+    virtualRate: 0.03,
     location: 'Nairobi, Kenya',
     avatar: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=150&h=150&fit=crop&crop=face',
     rating: 4.8,
@@ -27,7 +28,8 @@ const mockTrainers = [
     name: 'Sarah Wanjiku',
     bio: 'Yoga instructor and wellness coach. Specializing in mindfulness and flexibility.',
     specialties: ['Yoga', 'Pilates', 'Meditation'],
-    hourlyRate: 0.04,
+    physicalRate: 0.04,
+    virtualRate: 0.025,
     location: 'Mombasa, Kenya',
     avatar: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=150&h=150&fit=crop&crop=face',
     rating: 4.9,
@@ -40,7 +42,8 @@ const mockTrainers = [
     name: 'David Ochieng',
     bio: 'Former athlete turned fitness coach. Expert in sports performance and endurance.',
     specialties: ['Sports Performance', 'Cardio', 'Endurance'],
-    hourlyRate: 0.06,
+    physicalRate: 0.06,
+    virtualRate: 0.04,
     location: 'Kisumu, Kenya',
     avatar: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=150&h=150&fit=crop&crop=face',
     rating: 4.7,
@@ -53,7 +56,8 @@ const mockTrainers = [
     name: 'Grace Akinyi',
     bio: 'Nutrition expert and fitness coach. Holistic approach to health and wellness.',
     specialties: ['Nutrition', 'Weight Loss', 'Lifestyle Coaching'],
-    hourlyRate: 0.045,
+    physicalRate: 0.045,
+    virtualRate: 0.03,
     location: 'Nairobi, Kenya',
     avatar: 'https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=150&h=150&fit=crop&crop=face',
     rating: 4.6,
@@ -79,7 +83,8 @@ export default function TrainersPage() {
       trainer.specialties.some((s) => selectedSpecialties.includes(s));
 
     const matchesPrice =
-      trainer.hourlyRate >= priceRange[0] && trainer.hourlyRate <= priceRange[1];
+      (trainer.physicalRate >= priceRange[0] && trainer.physicalRate <= priceRange[1]) ||
+      (trainer.virtualRate >= priceRange[0] && trainer.virtualRate <= priceRange[1]);
 
     const matchesVerified = !verifiedOnly || trainer.isVerified;
 

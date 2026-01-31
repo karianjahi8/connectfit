@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Star, MapPin, CheckCircle, Clock, Dumbbell } from 'lucide-react';
+import { Star, MapPin, CheckCircle, Dumbbell, Users, Video } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,7 +12,8 @@ interface Trainer {
   name: string;
   bio: string;
   specialties: string[];
-  hourlyRate: number;
+  physicalRate: number;
+  virtualRate: number;
   location: string;
   avatar: string;
   rating: number;
@@ -26,7 +27,8 @@ interface TrainerCardProps {
 
 export function TrainerCard({ trainer }: TrainerCardProps) {
   const { data: rates } = useExchangeRates();
-  const kesAmount = rates ? convertToKES(trainer.hourlyRate, 'AVAX', rates) : 0;
+  const physicalKes = rates ? convertToKES(trainer.physicalRate, 'AVAX', rates) : 0;
+  const virtualKes = rates ? convertToKES(trainer.virtualRate, 'AVAX', rates) : 0;
 
   return (
     <Card className="group h-full gradient-card border-border/50 hover:shadow-medium hover:border-primary/20 transition-all duration-300">
@@ -91,24 +93,43 @@ export function TrainerCard({ trainer }: TrainerCardProps) {
           )}
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-border/50">
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1">
-              <Clock className="w-4 h-4 text-muted-foreground" />
-              <span className="font-display font-bold text-lg">
-                {trainer.hourlyRate} AVAX
+        <div className="pt-4 border-t border-border/50 space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            {/* Physical Rate */}
+            <div className="flex flex-col p-2 rounded-lg bg-muted/30">
+              <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
+                <Users className="w-3 h-3" />
+                <span>Physical</span>
+              </div>
+              <span className="font-display font-bold text-sm">
+                {trainer.physicalRate} AVAX
               </span>
-              <span className="text-sm text-muted-foreground">/hr</span>
+              {rates && (
+                <span className="text-xs text-muted-foreground">
+                  ≈ {formatKES(physicalKes)}
+                </span>
+              )}
             </div>
-            {rates && (
-              <span className="text-xs text-muted-foreground ml-5">
-                ≈ {formatKES(kesAmount)}
+            
+            {/* Virtual Rate */}
+            <div className="flex flex-col p-2 rounded-lg bg-muted/30">
+              <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
+                <Video className="w-3 h-3" />
+                <span>Virtual</span>
+              </div>
+              <span className="font-display font-bold text-sm">
+                {trainer.virtualRate} AVAX
               </span>
-            )}
+              {rates && (
+                <span className="text-xs text-muted-foreground">
+                  ≈ {formatKES(virtualKes)}
+                </span>
+              )}
+            </div>
           </div>
 
-          <Link to={`/trainers/${trainer.id}`}>
-            <Button variant="hero" size="sm">
+          <Link to={`/trainers/${trainer.id}`} className="block">
+            <Button variant="hero" size="sm" className="w-full">
               Book Now
             </Button>
           </Link>

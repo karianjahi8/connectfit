@@ -1,13 +1,14 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Dumbbell, Search, Calendar, User, MessageCircle } from 'lucide-react';
+import { Dumbbell, Search, Calendar, User, MessageCircle, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 const navLinks = [
-  { to: '/trainers', label: 'Find Trainers', icon: Search },
-  { to: '/bookings', label: 'My Bookings', icon: Calendar },
+  { to: '/trainers', label: 'Trainers', icon: Search },
+  { to: '/clubs', label: 'Clubs', icon: Building2 },
+  { to: '/bookings', label: 'Bookings', icon: Calendar },
   { to: '/messages', label: 'Messages', icon: MessageCircle },
   { to: '/profile', label: 'Profile', icon: User },
 ];

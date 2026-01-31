@@ -9,6 +9,7 @@ import TrainerDetailPage from "./pages/TrainerDetailPage";
 import BookingsPage from "./pages/BookingsPage";
 import ProfilePage from "./pages/ProfilePage";
 import MessagesPage from "./pages/MessagesPage";
+import ClubsPage from "./pages/ClubsPage";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/trainers" element={<TrainersPage />} />
           <Route path="/trainers/:id" element={<TrainerDetailPage />} />
           <Route path="/bookings" element={<BookingsPage />} />
+          <Route path="/clubs" element={<ClubsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/messages" element={<MessagesPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
