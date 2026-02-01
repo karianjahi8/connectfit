@@ -1,4 +1,4 @@
-import { connectorsForWallets, getDefaultConfig } from '@rainbow-me/rainbowkit';
+import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import { createConfig, http } from 'wagmi';
 import { avalanche, avalancheFuji } from 'wagmi/chains';
 import {
