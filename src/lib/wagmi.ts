@@ -10,7 +10,10 @@ import {
 
 // WalletConnect Cloud Project ID - Required for mobile wallet connections
 // Get your own at https://cloud.walletconnect.com
-const WALLETCONNECT_PROJECT_ID = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '89e2593e6c2f22482e1d8a785e0d3eb0';
+const WALLETCONNECT_PROJECT_ID = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID;
+if (!WALLETCONNECT_PROJECT_ID) {
+  throw new Error('Missing VITE_WALLETCONNECT_PROJECT_ID');
+}
 
 // Configure connectors with proper mobile support
 const connectors = connectorsForWallets(
