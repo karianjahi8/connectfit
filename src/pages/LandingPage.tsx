@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
 import {
   Dumbbell,
@@ -51,6 +51,7 @@ const stats = [
 
 export default function LandingPage() {
   const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
 
   return (
     <div className="min-h-screen">
@@ -121,19 +122,15 @@ export default function LandingPage() {
                   </Link>
                 </>
               ) : (
-                <>
-                  <ConnectButton.Custom>
-                    {({ openConnectModal }) => (
-                      <Button
-                        onClick={openConnectModal}
-                        variant="hero"
-                        size="xl"
-                      >
-                        <Wallet className="w-5 h-5" />
-                        Connect Wallet
-                      </Button>
-                    )}
-                  </ConnectButton.Custom>
+              <>
+                  <Button
+                    onClick={openConnectModal}
+                    variant="hero"
+                    size="xl"
+                  >
+                    <Wallet className="w-5 h-5" />
+                    Connect Wallet
+                  </Button>
                   <Link to="/trainers">
                     <Button variant="glass" size="xl">
                       Explore Platform
@@ -316,9 +313,7 @@ export default function LandingPage() {
                 Join the decentralized fitness revolution. Connect your wallet
                 and book your first session today.
               </p>
-              <ConnectButton.Custom>
-                {({ account, openConnectModal }) =>
-                  account ? (
+              {isConnected ? (
                     <Link to="/trainers">
                       <Button variant="hero" size="xl">
                         Find Your Trainer
@@ -334,9 +329,7 @@ export default function LandingPage() {
                       <Wallet className="w-5 h-5" />
                       Get Started
                     </Button>
-                  )
-                }
-              </ConnectButton.Custom>
+                  )}
             </div>
           </motion.div>
         </div>
