@@ -1,12 +1,15 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Dumbbell, Search, Calendar, User, MessageCircle, Building2 } from 'lucide-react';
+import { Dumbbell, Search, Calendar, User, MessageCircle, Building2, ShoppingBag, ShoppingCart, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { useCart } from '@/hooks/useCart';
 
 const navLinks = [
   { to: '/trainers', label: 'Trainers', icon: Search },
+  { to: '/marketplace', label: 'Market', icon: ShoppingBag },
   { to: '/clubs', label: 'Clubs', icon: Building2 },
   { to: '/bookings', label: 'Bookings', icon: Calendar },
   { to: '/messages', label: 'Messages', icon: MessageCircle },
@@ -15,6 +18,7 @@ const navLinks = [
 
 export function Header() {
   const location = useLocation();
+  const { cartCount } = useCart();
 
   return (
     <motion.header
@@ -59,6 +63,22 @@ export function Header() {
 
           {/* Wallet Connect */}
           <div className="flex items-center gap-3">
+            <Link to="/vendor">
+              <Button variant="ghost" size="sm" className="gap-1.5 hidden sm:flex">
+                <Store className="w-4 h-4" />
+                Sell
+              </Button>
+            </Link>
+            <Link to="/cart" className="relative">
+              <Button variant="ghost" size="icon">
+                <ShoppingCart className="w-5 h-5" />
+                {cartCount > 0 && (
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-[10px] gradient-primary text-primary-foreground">
+                    {cartCount}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
             <ConnectButton.Custom>
               {({
                 account,
