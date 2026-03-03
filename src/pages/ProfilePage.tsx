@@ -22,6 +22,7 @@ import {
   Check,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { CountrySelect } from '@/components/ui/country-select';
 
 const fitnessGoals = [
   'Weight Loss',
@@ -235,12 +236,11 @@ export default function ProfilePage() {
                     <Label>Location</Label>
                     <div className="relative">
                       <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        placeholder="e.g., Nairobi, Kenya"
-                        className="pl-10"
-                      />
+                      <Input placeholder="e.g., New York, USA" className="pl-10" />
                     </div>
                   </div>
+
+                  <CountrySelect value="" onChange={() => {}} />
 
                   {!isTrainer && (
                     <div className="space-y-3">

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
@@ -10,12 +10,16 @@ import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { Dumbbell } from 'lucide-react';
 import { useEffect } from 'react';
+import { CountrySelect } from '@/components/ui/country-select';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [country, setCountry] = useState('');
+  const [city, setCity] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { signUp, signIn, user } = useAuth();
   const { toast } = useToast();
@@ -30,8 +34,17 @@ export default function AuthPage() {
     setIsSubmitting(true);
     try {
       if (isSignUp) {
-        const { error } = await signUp(email, password, fullName);
+        if (!country) {
+          toast({ title: 'Please select your country', variant: 'destructive' });
+          setIsSubmitting(false);
+          return;
+        }
+        const { error, data } = await signUp(email, password, fullName);
         if (error) throw error;
+        // Update profile with country & city after signup
+        if (data?.user) {
+          await supabase.from('profiles').update({ country, city }).eq('id', data.user.id);
+        }
         toast({ title: 'Check your email', description: 'We sent you a verification link.' });
       } else {
         const { error } = await signIn(email, password);
@@ -61,10 +74,17 @@ export default function AuthPage() {
           <CardContent className="p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               {isSignUp && (
-                <div>
-                  <Label>Full Name</Label>
-                  <Input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="John Doe" className="mt-1" required />
-                </div>
+                <>
+                  <div>
+                    <Label>Full Name</Label>
+                    <Input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="John Doe" className="mt-1" required />
+                  </div>
+                  <CountrySelect value={country} onChange={setCountry} />
+                  <div>
+                    <Label>City</Label>
+                    <Input value={city} onChange={(e) => setCity(e.target.value)} placeholder="e.g. New York" className="mt-1" />
+                  </div>
+                </>
               )}
               <div>
                 <Label>Email</Label>
