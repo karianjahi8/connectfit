@@ -2,16 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface ExchangeRates {
-  avaxToKes: number;
-  usdcToKes: number;
   avaxToUsd: number;
   usdcToUsd: number;
   timestamp: number;
 }
 
 const FALLBACK_RATES: ExchangeRates = {
-  avaxToKes: 4500,
-  usdcToKes: 129,
   avaxToUsd: 35,
   usdcToUsd: 1,
   timestamp: Date.now(),
@@ -32,19 +28,35 @@ export function useExchangeRates() {
   return useQuery({
     queryKey: ['exchange-rates'],
     queryFn: fetchExchangeRates,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    refetchInterval: 5 * 60 * 1000, // Refetch every 5 minutes
+    staleTime: 5 * 60 * 1000,
+    refetchInterval: 5 * 60 * 1000,
     placeholderData: FALLBACK_RATES,
   });
 }
 
-export function formatKES(amount: number): string {
-  return new Intl.NumberFormat('en-KE', {
+export function formatUSD(amount: number): string {
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'KES',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(amount);
+}
+
+export function convertToUSD(
+  amount: number,
+  currency: 'AVAX' | 'USDC',
+  rates: ExchangeRates
+): number {
+  if (currency === 'AVAX') {
+    return amount * rates.avaxToUsd;
+  }
+  return amount * rates.usdcToUsd;
+}
+
+// Keep legacy exports for backward compat
+export function formatKES(amount: number): string {
+  return formatUSD(amount);
 }
 
 export function convertToKES(
@@ -52,8 +64,5 @@ export function convertToKES(
   currency: 'AVAX' | 'USDC',
   rates: ExchangeRates
 ): number {
-  if (currency === 'AVAX') {
-    return amount * rates.avaxToKes;
-  }
-  return amount * rates.usdcToKes;
+  return convertToUSD(amount, currency, rates);
 }
