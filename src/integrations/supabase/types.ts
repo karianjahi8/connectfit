@@ -200,27 +200,39 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          city: string | null
+          country: string | null
           created_at: string
           full_name: string | null
           id: string
+          latitude: number | null
+          longitude: number | null
           phone: string | null
           updated_at: string
           wallet_address: string | null
         }
         Insert: {
           avatar_url?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string
           full_name?: string | null
           id: string
+          latitude?: number | null
+          longitude?: number | null
           phone?: string | null
           updated_at?: string
           wallet_address?: string | null
         }
         Update: {
           avatar_url?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string
           full_name?: string | null
           id?: string
+          latitude?: number | null
+          longitude?: number | null
           phone?: string | null
           updated_at?: string
           wallet_address?: string | null
@@ -231,11 +243,15 @@ export type Database = {
         Row: {
           business_name: string
           certification_hash: string | null
+          city: string | null
+          country: string | null
           created_at: string
           description: string | null
           id: string
+          latitude: number | null
           location: string | null
           logo_url: string | null
+          longitude: number | null
           onchain_verified: boolean
           phone: string | null
           status: Database["public"]["Enums"]["vendor_status"]
@@ -247,11 +263,15 @@ export type Database = {
         Insert: {
           business_name: string
           certification_hash?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string
           description?: string | null
           id?: string
+          latitude?: number | null
           location?: string | null
           logo_url?: string | null
+          longitude?: number | null
           onchain_verified?: boolean
           phone?: string | null
           status?: Database["public"]["Enums"]["vendor_status"]
@@ -263,11 +283,15 @@ export type Database = {
         Update: {
           business_name?: string
           certification_hash?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string
           description?: string | null
           id?: string
+          latitude?: number | null
           location?: string | null
           logo_url?: string | null
+          longitude?: number | null
           onchain_verified?: boolean
           phone?: string | null
           status?: Database["public"]["Enums"]["vendor_status"]
