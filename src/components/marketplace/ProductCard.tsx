@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
-import { ShoppingCart, CheckCircle, Package } from 'lucide-react';
+import { ShoppingCart, CheckCircle, Package, Globe } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useExchangeRates, formatKES, convertToKES } from '@/hooks/useExchangeRates';
+import { useExchangeRates, convertToLocalCurrency, convertToUSDC, formatLocalCurrency } from '@/hooks/useExchangeRates';
 import { useCart } from '@/hooks/useCart';
+import { useSelectedCountry } from '@/hooks/useSelectedCountry';
+import { getCountryName } from '@/lib/countries';
 
 interface Product {
   id: string;
@@ -19,16 +21,19 @@ interface Product {
   vendor: {
     business_name: string;
     onchain_verified: boolean;
+    country?: string | null;
   };
 }
 
 export function ProductCard({ product }: { product: Product }) {
   const { data: rates } = useExchangeRates();
+  const { selectedCountry } = useSelectedCountry();
   const { addToCart } = useCart();
 
-  const primaryPrice = product.price_avax ?? product.price_usdc ?? 0;
-  const currency = product.price_avax ? 'AVAX' : 'USDC';
-  const kesAmount = product.price_kes ?? (rates ? convertToKES(primaryPrice, currency, rates) : 0);
+  const baseCurrency = product.price_usdc != null ? 'USDC' : 'AVAX';
+  const primaryPrice = product.price_usdc ?? product.price_avax ?? 0;
+  const usdcAmount = rates ? convertToUSDC(primaryPrice, baseCurrency, rates) : primaryPrice;
+  const localAmount = rates ? convertToLocalCurrency(usdcAmount, 'USDC', selectedCountry, rates) : 0;
 
   const categoryLabels: Record<string, string> = {
     gym_wear: 'Gym Wear',
@@ -63,10 +68,14 @@ export function ProductCard({ product }: { product: Product }) {
 
       <CardContent className="p-4 space-y-3">
         <div>
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1 flex-wrap">
             <span>{product.vendor.business_name}</span>
-            {product.vendor.onchain_verified && (
-              <CheckCircle className="w-3 h-3 text-success" />
+            {product.vendor.onchain_verified && <CheckCircle className="w-3 h-3 text-success" />}
+            {product.vendor.country && (
+              <span className="inline-flex items-center gap-1">
+                <Globe className="w-3 h-3" />
+                {getCountryName(product.vendor.country)}
+              </span>
             )}
           </div>
           <Link to={`/marketplace/${product.id}`}>
@@ -76,15 +85,11 @@ export function ProductCard({ product }: { product: Product }) {
           </Link>
         </div>
 
-        <div className="flex items-end justify-between">
+        <div className="flex items-end justify-between gap-3">
           <div>
-            <span className="font-display font-bold text-lg">
-              {primaryPrice} {currency}
-            </span>
-            {kesAmount > 0 && (
-              <p className="text-xs text-muted-foreground">
-                ≈ {formatKES(kesAmount)}
-              </p>
+            <span className="font-display font-bold text-lg">{usdcAmount.toFixed(2)} USDC</span>
+            {rates && localAmount > 0 && (
+              <p className="text-xs text-muted-foreground">≈ {formatLocalCurrency(localAmount, selectedCountry)}</p>
             )}
           </div>
           <Button

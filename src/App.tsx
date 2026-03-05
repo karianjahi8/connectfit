@@ -14,6 +14,7 @@ import MarketplacePage from "./pages/MarketplacePage";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import VendorDashboardPage from "./pages/VendorDashboardPage";
+import InstallPage from "./pages/InstallPage";
 import AuthPage from "./pages/AuthPage";
 import NotFound from "./pages/NotFound";
 
@@ -36,8 +37,8 @@ const App = () => (
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/vendor" element={<VendorDashboardPage />} />
+          <Route path="/install" element={<InstallPage />} />
           <Route path="/auth" element={<AuthPage />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

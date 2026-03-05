@@ -52,18 +52,18 @@ export function MarketplaceFilters({
         </div>
 
         <div className="space-y-3">
-          <Label className="font-medium">Max Price (AVAX)</Label>
+          <Label className="font-medium">Max Price (USDC)</Label>
           <Slider
             value={[priceRange[1]]}
             onValueChange={([val]) => onPriceRangeChange([priceRange[0], val])}
-            max={10}
+            max={500}
             min={0}
-            step={0.1}
+            step={5}
             className="py-2"
           />
           <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <span>0 AVAX</span>
-            <span className="font-medium text-foreground">Up to {priceRange[1]} AVAX</span>
+            <span>0 USDC</span>
+            <span className="font-medium text-foreground">Up to {priceRange[1]} USDC</span>
           </div>
         </div>
 
@@ -86,12 +86,12 @@ export function MarketplaceFilters({
           </div>
         </div>
 
-        {(selectedCategories.length > 0 || verifiedOnly || priceRange[1] < 10) && (
+        {(selectedCategories.length > 0 || verifiedOnly || priceRange[1] < 500) && (
           <button
             onClick={() => {
               onCategoriesChange([]);
               onVerifiedOnlyChange(false);
-              onPriceRangeChange([0, 10]);
+              onPriceRangeChange([0, 500]);
             }}
             className="text-sm text-primary hover:underline"
           >
