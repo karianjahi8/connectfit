@@ -5,14 +5,20 @@ import { Layout } from '@/components/layout/Layout';
 import { ProductCard } from '@/components/marketplace/ProductCard';
 import { MarketplaceFilters } from '@/components/marketplace/MarketplaceFilters';
 import { Input } from '@/components/ui/input';
-import { Search, ShoppingBag } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Search, ShoppingBag, Globe } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { COUNTRIES, getCountryName } from '@/lib/countries';
+import { useSelectedCountry } from '@/hooks/useSelectedCountry';
+import { useExchangeRates, convertToUSDC } from '@/hooks/useExchangeRates';
 
 export default function MarketplacePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
   const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const { selectedCountry, setSelectedCountry } = useSelectedCountry();
+  const { data: rates } = useExchangeRates();
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['marketplace-products'],
@@ -21,7 +27,7 @@ export default function MarketplacePage() {
         .from('products')
         .select(`
           id, name, description, category, price_avax, price_usdc, price_kes, images, stock, is_active,
-          vendors:vendor_id ( business_name, onchain_verified, status )
+          vendors:vendor_id ( business_name, onchain_verified, status, country )
         `)
         .eq('is_active', true)
         .order('created_at', { ascending: false });
@@ -36,9 +42,11 @@ export default function MarketplacePage() {
   const filtered = products.filter((p: any) => {
     const matchesSearch = !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase()) || (p.description || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCat = selectedCategories.length === 0 || selectedCategories.includes(p.category);
-    const matchesPrice = (p.price_avax ?? 0) <= priceRange[1];
+    const usdcPrice = p.price_usdc ?? (rates && p.price_avax ? convertToUSDC(p.price_avax, 'AVAX', rates) : 0);
+    const matchesPrice = usdcPrice <= priceRange[1];
     const matchesVerified = !verifiedOnly || p.vendor?.onchain_verified;
-    return matchesSearch && matchesCat && matchesPrice && matchesVerified;
+    const matchesRegion = !selectedCountry || p.vendor?.country === selectedCountry;
+    return matchesSearch && matchesCat && matchesPrice && matchesVerified && matchesRegion;
   });
 
   return (
@@ -49,13 +57,28 @@ export default function MarketplacePage() {
             <ShoppingBag className="inline-block w-8 h-8 mr-2 -mt-1" />
             <span className="gradient-text">Marketplace</span>
           </h1>
-          <p className="text-muted-foreground">Gym wear, equipment & supplements from verified vendors</p>
+          <p className="text-muted-foreground">Global fitness gear from verified merchants in {getCountryName(selectedCountry)}</p>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="relative mb-6">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-          <Input placeholder="Search products..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-12 h-12 text-base" />
-        </motion.div>
+        <div className="grid gap-4 md:grid-cols-[1fr_240px] mb-6">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <Input placeholder="Search products..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-12 h-12 text-base" />
+          </motion.div>
+          <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+            <SelectTrigger className="h-12">
+              <div className="flex items-center gap-2">
+                <Globe className="w-4 h-4 text-muted-foreground" />
+                <SelectValue placeholder="Select country" />
+              </div>
+            </SelectTrigger>
+            <SelectContent>
+              {COUNTRIES.map((country) => (
+                <SelectItem key={country.code} value={country.code}>{country.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           <motion.aside initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="lg:w-72 shrink-0">
@@ -70,7 +93,7 @@ export default function MarketplacePage() {
           </motion.aside>
 
           <div className="flex-1">
-            <p className="text-sm text-muted-foreground mb-6">{filtered.length} products found</p>
+            <p className="text-sm text-muted-foreground mb-6">{filtered.length} products found in {getCountryName(selectedCountry)}</p>
 
             {isLoading ? (
               <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -91,7 +114,7 @@ export default function MarketplacePage() {
             {!isLoading && filtered.length === 0 && (
               <div className="text-center py-16">
                 <ShoppingBag className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
-                <p className="text-muted-foreground">No products found. Check back soon!</p>
+                <p className="text-muted-foreground">No merchant products found for this region yet.</p>
               </div>
             )}
           </div>

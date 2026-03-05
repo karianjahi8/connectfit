@@ -1,21 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { Dumbbell } from 'lucide-react';
-import { useEffect } from 'react';
+import { COUNTRIES } from '@/lib/countries';
+import { useSelectedCountry } from '@/hooks/useSelectedCountry';
 
 export default function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [city, setCity] = useState('');
+  const { selectedCountry, setSelectedCountry } = useSelectedCountry();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { signUp, signIn, user } = useAuth();
   const { toast } = useToast();
@@ -30,7 +34,7 @@ export default function AuthPage() {
     setIsSubmitting(true);
     try {
       if (isSignUp) {
-        const { error } = await signUp(email, password, fullName);
+        const { error } = await signUp(email, password, fullName, selectedCountry, city);
         if (error) throw error;
         toast({ title: 'Check your email', description: 'We sent you a verification link.' });
       } else {
@@ -53,7 +57,7 @@ export default function AuthPage() {
             <Dumbbell className="w-8 h-8 text-primary-foreground" />
           </div>
           <h1 className="font-display text-3xl font-bold">
-            {isSignUp ? 'Create Account' : 'Welcome Back'}
+            {isSignUp ? 'Create Global Account' : 'Welcome Back'}
           </h1>
         </motion.div>
 
@@ -61,10 +65,31 @@ export default function AuthPage() {
           <CardContent className="p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               {isSignUp && (
-                <div>
-                  <Label>Full Name</Label>
-                  <Input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="John Doe" className="mt-1" required />
-                </div>
+                <>
+                  <div>
+                    <Label>Full Name</Label>
+                    <Input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="John Doe" className="mt-1" required />
+                  </div>
+                  <div>
+                    <Label>Country</Label>
+                    <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                      <SelectTrigger className="mt-1">
+                        <SelectValue placeholder="Select country" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {COUNTRIES.map((country) => (
+                          <SelectItem key={country.code} value={country.code}>
+                            {country.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label>City</Label>
+                    <Input value={city} onChange={(e) => setCity(e.target.value)} placeholder="Your city" className="mt-1" />
+                  </div>
+                </>
               )}
               <div>
                 <Label>Email</Label>
@@ -80,7 +105,7 @@ export default function AuthPage() {
             </form>
             <p className="text-center text-sm text-muted-foreground mt-4">
               {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
-              <button onClick={() => setIsSignUp(!isSignUp)} className="text-primary hover:underline font-medium">
+              <button type="button" onClick={() => setIsSignUp(!isSignUp)} className="text-primary hover:underline font-medium">
                 {isSignUp ? 'Sign In' : 'Sign Up'}
               </button>
             </p>
