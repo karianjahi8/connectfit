@@ -14,7 +14,6 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Store, Plus, Package, CheckCircle, Clock, XCircle, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { CountrySelect } from '@/components/ui/country-select';
 
 export default function VendorDashboardPage() {
   const { user } = useAuth();
@@ -195,7 +194,7 @@ function VendorStatusBadge({ status }: { status: string }) {
 function VendorRegistration({ userId }: { userId: string }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [form, setForm] = useState({ businessName: '', description: '', location: '', walletAddress: '', phone: '', country: '', city: '' });
+  const [form, setForm] = useState({ businessName: '', description: '', location: '', walletAddress: '', phone: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -213,8 +212,6 @@ function VendorRegistration({ userId }: { userId: string }) {
         location: form.location,
         wallet_address: form.walletAddress,
         phone: form.phone,
-        country: form.country,
-        city: form.city,
       });
       if (error) throw error;
       toast({ title: 'Vendor registration submitted!', description: 'Your account is pending verification.' });
@@ -247,12 +244,7 @@ function VendorRegistration({ userId }: { userId: string }) {
               </div>
               <div>
                 <Label>Location</Label>
-                <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="e.g. Downtown Mall, Floor 2" className="mt-1" />
-              </div>
-              <CountrySelect value={form.country} onChange={(v) => setForm({ ...form, country: v })} />
-              <div>
-                <Label>City</Label>
-                <Input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} placeholder="e.g. New York" className="mt-1" />
+                <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="e.g. Nairobi, Kenya" className="mt-1" />
               </div>
               <div>
                 <Label>Wallet Address (for crypto payments)</Label>
