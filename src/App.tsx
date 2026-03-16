@@ -17,6 +17,7 @@ import VendorDashboardPage from "./pages/VendorDashboardPage";
 import InstallPage from "./pages/InstallPage";
 import AuthPage from "./pages/AuthPage";
 import NotFound from "./pages/NotFound";
+import { ChatWidget } from "./components/chatbot/ChatWidget";
 
 const App = () => (
   <Web3Provider>
