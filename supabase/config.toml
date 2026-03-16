@@ -1,1 +1,4 @@
 project_id = "oxlfbrghwmoectlnvewm"
+
+[functions.blockchain-chatbot]
+verify_jwt = false
