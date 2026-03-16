@@ -42,6 +42,7 @@ const App = () => (
           <Route path="/auth" element={<AuthPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <ChatWidget />
       </BrowserRouter>
     </TooltipProvider>
   </Web3Provider>
