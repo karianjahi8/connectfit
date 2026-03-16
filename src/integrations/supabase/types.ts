@@ -46,6 +46,77 @@ export type Database = {
           },
         ]
       }
+      chatbot_conversations: {
+        Row: {
+          current_page: string | null
+          ended_at: string | null
+          escalated: boolean | null
+          id: string
+          message_count: number | null
+          metadata: Json | null
+          session_id: string
+          started_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          current_page?: string | null
+          ended_at?: string | null
+          escalated?: boolean | null
+          id?: string
+          message_count?: number | null
+          metadata?: Json | null
+          session_id: string
+          started_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          current_page?: string | null
+          ended_at?: string | null
+          escalated?: boolean | null
+          id?: string
+          message_count?: number | null
+          metadata?: Json | null
+          session_id?: string
+          started_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      chatbot_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string | null
+          feedback: string | null
+          id: string
+          role: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string | null
+          feedback?: string | null
+          id?: string
+          role: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string | null
+          feedback?: string | null
+          id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chatbot_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "chatbot_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       order_items: {
         Row: {
           currency: string
