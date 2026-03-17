@@ -24,7 +24,7 @@ export function Header() {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50"
+      className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/30"
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
@@ -35,12 +35,12 @@ export function Header() {
                 <Dumbbell className="w-5 h-5 text-primary-foreground" />
               </div>
             </div>
-            <span className="font-display font-bold text-xl hidden sm:block">
+            <span className="font-display font-bold text-xl hidden sm:block text-foreground">
               Fit<span className="gradient-text">Connect</span>
             </span>
           </Link>
 
-          {/* Navigation - Desktop */}
+          {/* Navigation — Desktop */}
           <nav className="hidden lg:flex items-center gap-1">
             {navLinks.map(({ to, label, icon: Icon }) => {
               const isActive = location.pathname === to;
@@ -49,8 +49,8 @@ export function Header() {
                   <Button
                     variant="ghost"
                     className={cn(
-                      'gap-2 font-medium',
-                      isActive && 'bg-accent text-accent-foreground'
+                      'gap-2 font-medium nav-link-underline',
+                      isActive && 'bg-primary/10 text-primary'
                     )}
                   >
                     <Icon className="w-4 h-4" />
@@ -61,7 +61,7 @@ export function Header() {
             })}
           </nav>
 
-          {/* Wallet Connect */}
+          {/* Actions */}
           <div className="flex items-center gap-3">
             <Link to="/vendor">
               <Button variant="ghost" size="sm" className="gap-1.5 hidden sm:flex">
@@ -105,11 +105,7 @@ export function Header() {
                     {(() => {
                       if (!connected) {
                         return (
-                          <Button
-                            onClick={openConnectModal}
-                            variant="hero"
-                            size="default"
-                          >
+                          <Button onClick={openConnectModal} variant="hero" size="default">
                             Connect Wallet
                           </Button>
                         );
@@ -117,10 +113,7 @@ export function Header() {
 
                       if (chain.unsupported) {
                         return (
-                          <Button
-                            onClick={openChainModal}
-                            variant="destructive"
-                          >
+                          <Button onClick={openChainModal} variant="destructive">
                             Wrong Network
                           </Button>
                         );
@@ -144,14 +137,10 @@ export function Header() {
                             {chain.name}
                           </Button>
 
-                          <Button
-                            onClick={openAccountModal}
-                            variant="wallet"
-                            size="default"
-                          >
-                            {account.displayName}
+                          <Button onClick={openAccountModal} variant="wallet" size="default">
+                            <span className="font-mono text-xs">{account.displayName}</span>
                             {account.displayBalance && (
-                              <span className="hidden sm:inline text-muted-foreground ml-1">
+                              <span className="hidden sm:inline text-muted-foreground ml-1 text-xs">
                                 ({account.displayBalance})
                               </span>
                             )}
@@ -168,7 +157,7 @@ export function Header() {
       </div>
 
       {/* Mobile Navigation */}
-      <nav className="lg:hidden border-t border-border/50 bg-background/95 backdrop-blur-sm">
+      <nav className="lg:hidden border-t border-border/30 bg-background/95 backdrop-blur-xl">
         <div className="flex justify-around py-2">
           {navLinks.map(({ to, label, icon: Icon }) => {
             const isActive = location.pathname === to;
