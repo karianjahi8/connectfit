@@ -1,7 +1,7 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Dumbbell, Search, Calendar, User, MessageCircle, Building2, ShoppingBag, ShoppingCart, Store } from 'lucide-react';
+import { Search, Calendar, User, MessageCircle, Building2, ShoppingBag, ShoppingCart, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -31,9 +31,11 @@ export function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
             <div className="relative">
-              <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-glow group-hover:scale-105 transition-transform">
-                <Dumbbell className="w-5 h-5 text-primary-foreground" />
-              </div>
+              <img
+                src="/fitconnect-icon.png"
+                alt="FitConnect"
+                className="w-10 h-10 rounded-xl shadow-glow group-hover:scale-105 transition-transform"
+              />
             </div>
             <span className="font-display font-bold text-xl hidden sm:block">
               Fit<span className="gradient-text">Connect</span>
