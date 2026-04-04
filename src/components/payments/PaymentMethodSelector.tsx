@@ -2,42 +2,43 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Wallet, DollarSign, Smartphone, CheckCircle } from 'lucide-react';
+import { DollarSign, Smartphone, CheckCircle, CreditCard } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { formatKES, convertToKES, type ExchangeRates } from '@/hooks/useExchangeRates';
+import { formatLocalCurrency, convertToLocalCurrency, type ExchangeRates } from '@/hooks/useExchangeRates';
 
-export type PaymentMethod = 'AVAX' | 'USDC' | 'MPESA';
+export type PaymentMethod = 'USDC' | 'AVAX' | 'MPESA';
 
 interface PaymentMethodSelectorProps {
   selected: PaymentMethod;
   onSelect: (method: PaymentMethod) => void;
-  amount: number; // Amount in AVAX (base currency for trainer rates)
+  amount: number; // Amount in USDC
   rates: ExchangeRates;
+  countryCode?: string;
 }
 
 const paymentMethods = [
   {
-    id: 'AVAX' as PaymentMethod,
-    name: 'AVAX',
-    description: 'Native Avalanche token',
-    icon: Wallet,
-    available: true,
-    color: 'text-[#E84142]',
-    bgColor: 'bg-[#E84142]/10',
-  },
-  {
     id: 'USDC' as PaymentMethod,
-    name: 'USDC',
-    description: 'USD Stablecoin',
-    icon: DollarSign,
+    name: 'Pay with card or balance',
+    description: 'Primary payment method',
+    icon: CreditCard,
     available: true,
     color: 'text-[#2775CA]',
     bgColor: 'bg-[#2775CA]/10',
   },
   {
+    id: 'AVAX' as PaymentMethod,
+    name: 'AVAX',
+    description: 'Alternative crypto payment',
+    icon: DollarSign,
+    available: true,
+    color: 'text-[#E84142]',
+    bgColor: 'bg-[#E84142]/10',
+  },
+  {
     id: 'MPESA' as PaymentMethod,
-    name: 'M-Pesa',
-    description: 'Mobile money',
+    name: 'Mobile money',
+    description: 'Local mobile payment',
     icon: Smartphone,
     available: false,
     color: 'text-[#00A651]',
@@ -50,20 +51,19 @@ export function PaymentMethodSelector({
   onSelect,
   amount,
   rates,
+  countryCode = 'US',
 }: PaymentMethodSelectorProps) {
-  // Convert AVAX amount to other currencies
-  const avaxInKes = convertToKES(amount, 'AVAX', rates);
-  const usdcAmount = (amount * rates.avaxToUsd) / rates.usdcToUsd;
-  const usdcInKes = convertToKES(usdcAmount, 'USDC', rates);
+  const localAmount = convertToLocalCurrency(amount, 'USDC', countryCode, rates);
+  const avaxAmount = amount / (rates.avaxToUsd / rates.usdcToUsd);
 
   const getAmountForMethod = (method: PaymentMethod) => {
     switch (method) {
-      case 'AVAX':
-        return { crypto: `${amount} AVAX`, kes: formatKES(avaxInKes) };
       case 'USDC':
-        return { crypto: `${usdcAmount.toFixed(2)} USDC`, kes: formatKES(usdcInKes) };
+        return { display: `$${amount.toFixed(2)}`, local: formatLocalCurrency(localAmount, countryCode) };
+      case 'AVAX':
+        return { display: `${avaxAmount.toFixed(4)} AVAX`, local: formatLocalCurrency(localAmount, countryCode) };
       case 'MPESA':
-        return { crypto: null, kes: formatKES(avaxInKes) };
+        return { display: null, local: formatLocalCurrency(localAmount, countryCode) };
     }
   };
 
@@ -81,9 +81,7 @@ export function PaymentMethodSelector({
               key={method.id}
               className={cn(
                 'cursor-pointer transition-all border-2',
-                isSelected
-                  ? 'border-primary bg-primary/5'
-                  : 'border-border/50 hover:border-primary/30',
+                isSelected ? 'border-primary bg-primary/5' : 'border-border/50 hover:border-primary/30',
                 !method.available && 'opacity-60 cursor-not-allowed'
               )}
               onClick={() => method.available && onSelect(method.id)}
@@ -97,25 +95,15 @@ export function PaymentMethodSelector({
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-medium">{method.name}</span>
-                        {!method.available && (
-                          <Badge variant="outline" className="text-xs">
-                            Coming Soon
-                          </Badge>
-                        )}
-                        {isSelected && method.available && (
-                          <CheckCircle className="w-4 h-4 text-primary" />
-                        )}
+                        {!method.available && <Badge variant="outline" className="text-xs">Coming Soon</Badge>}
+                        {isSelected && method.available && <CheckCircle className="w-4 h-4 text-primary" />}
                       </div>
-                      <p className="text-xs text-muted-foreground">
-                        {method.description}
-                      </p>
+                      <p className="text-xs text-muted-foreground">{method.description}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    {amounts.crypto && (
-                      <p className="font-semibold text-sm">{amounts.crypto}</p>
-                    )}
-                    <p className="text-xs text-muted-foreground">{amounts.kes}</p>
+                    {amounts.display && <p className="font-semibold text-sm">{amounts.display}</p>}
+                    <p className="text-xs text-muted-foreground">{amounts.local}</p>
                   </div>
                 </div>
               </CardContent>
