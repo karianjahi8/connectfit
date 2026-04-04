@@ -1,4 +1,3 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, Calendar, User, MessageCircle, Building2, ShoppingBag, ShoppingCart, Store } from 'lucide-react';
@@ -6,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/hooks/useCart';
+import { AuthButton } from '@/components/web3/AuthButton';
 
 const navLinks = [
   { to: '/trainers', label: 'Trainers', icon: Search },
@@ -63,7 +63,7 @@ export function Header() {
             })}
           </nav>
 
-          {/* Wallet Connect */}
+          {/* Auth & Cart */}
           <div className="flex items-center gap-3">
             <Link to="/vendor">
               <Button variant="ghost" size="sm" className="gap-1.5 hidden sm:flex">
@@ -81,90 +81,7 @@ export function Header() {
                 )}
               </Button>
             </Link>
-            <ConnectButton.Custom>
-              {({
-                account,
-                chain,
-                openAccountModal,
-                openChainModal,
-                openConnectModal,
-                mounted,
-              }) => {
-                const ready = mounted;
-                const connected = ready && account && chain;
-
-                return (
-                  <div
-                    {...(!ready && {
-                      'aria-hidden': true,
-                      style: {
-                        opacity: 0,
-                        pointerEvents: 'none',
-                        userSelect: 'none',
-                      },
-                    })}
-                  >
-                    {(() => {
-                      if (!connected) {
-                        return (
-                          <Button
-                            onClick={openConnectModal}
-                            variant="hero"
-                            size="default"
-                          >
-                            Connect Wallet
-                          </Button>
-                        );
-                      }
-
-                      if (chain.unsupported) {
-                        return (
-                          <Button
-                            onClick={openChainModal}
-                            variant="destructive"
-                          >
-                            Wrong Network
-                          </Button>
-                        );
-                      }
-
-                      return (
-                        <div className="flex items-center gap-2">
-                          <Button
-                            onClick={openChainModal}
-                            variant="glass"
-                            size="sm"
-                            className="hidden sm:flex gap-2"
-                          >
-                            {chain.hasIcon && chain.iconUrl && (
-                              <img
-                                src={chain.iconUrl}
-                                alt={chain.name ?? 'Chain'}
-                                className="w-4 h-4 rounded-full"
-                              />
-                            )}
-                            {chain.name}
-                          </Button>
-
-                          <Button
-                            onClick={openAccountModal}
-                            variant="wallet"
-                            size="default"
-                          >
-                            {account.displayName}
-                            {account.displayBalance && (
-                              <span className="hidden sm:inline text-muted-foreground ml-1">
-                                ({account.displayBalance})
-                              </span>
-                            )}
-                          </Button>
-                        </div>
-                      );
-                    })()}
-                  </div>
-                );
-              }}
-            </ConnectButton.Custom>
+            <AuthButton />
           </div>
         </div>
       </div>

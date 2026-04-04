@@ -1,48 +1,87 @@
-import { useState, useEffect } from 'react';
+import { usePrivy } from '@privy-io/react-auth';
+import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import type { User, Session } from '@supabase/supabase-js';
 
 export function useAuth() {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+  const {
+    ready,
+    authenticated,
+    user,
+    login,
+    logout,
+    linkEmail,
+    linkGoogle,
+    linkPhone,
+    linkWallet,
+    exportWallet,
+  } = usePrivy();
 
+  // Sync Privy user identity to Supabase profiles table
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    if (!ready || !authenticated || !user) return;
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    const syncProfile = async () => {
+      const walletAddress = user.wallet?.address ?? null;
+      const email =
+        user.email?.address ??
+        user.google?.email ??
+        user.apple?.email ??
+        null;
+      const displayName =
+        (user.google as any)?.name ??
+        email?.split('@')[0] ??
+        (walletAddress
+          ? walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4)
+          : 'FitConnect User');
+      const avatarUrl = (user.google as any)?.picture ?? null;
 
-    return () => subscription.unsubscribe();
-  }, []);
+      await supabase.from('profiles').upsert(
+        {
+          id: user.id,
+          wallet_address: walletAddress,
+          full_name: displayName,
+          avatar_url: avatarUrl,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'id' }
+      );
+    };
 
-  const signUp = async (email: string, password: string, fullName: string, country: string, city: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { full_name: fullName, country, city },
-        emailRedirectTo: window.location.origin,
-      },
-    });
-    return { error };
+    syncProfile();
+  }, [ready, authenticated, user]);
+
+  const displayIdentity =
+    user?.email?.address ??
+    user?.google?.email ??
+    user?.apple?.email ??
+    user?.phone?.number ??
+    (user?.wallet?.address
+      ? user.wallet.address.slice(0, 6) + '...' + user.wallet.address.slice(-4)
+      : null);
+
+  const hasEmbeddedWallet =
+    user?.linkedAccounts?.some(
+      (a: any) => a.type === 'wallet' && a.walletClientType === 'privy'
+    ) ?? false;
+
+  return {
+    isReady: ready,
+    isAuthenticated: authenticated,
+    user,
+    displayIdentity,
+    hasEmbeddedWallet,
+    login,
+    logout,
+    linkEmail,
+    linkGoogle,
+    linkPhone,
+    linkWallet,
+    exportWallet,
+    // Backwards compatibility
+    loading: !ready,
+    session: authenticated ? { user } : null,
+    signUp: async () => { login(); return { error: null }; },
+    signIn: async () => { login(); return { error: null }; },
+    signOut: logout,
   };
-
-  const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error };
-  };
-
-  const signOut = async () => {
-    await supabase.auth.signOut();
-  };
-
-  return { user, session, loading, signUp, signIn, signOut };
 }

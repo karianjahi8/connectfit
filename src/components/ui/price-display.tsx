@@ -1,48 +1,41 @@
-import { useExchangeRates, formatKES, convertToKES } from '@/hooks/useExchangeRates';
+import { useExchangeRates, convertToLocalCurrency, formatLocalCurrency } from '@/hooks/useExchangeRates';
+import { useSelectedCountry } from '@/hooks/useSelectedCountry';
 import { cn } from '@/lib/utils';
 
 interface PriceDisplayProps {
   amount: number;
   currency?: 'AVAX' | 'USDC';
-  showKES?: boolean;
+  showLocal?: boolean;
   className?: string;
   size?: 'sm' | 'md' | 'lg';
 }
 
 export function PriceDisplay({
   amount,
-  currency = 'AVAX',
-  showKES = true,
+  currency = 'USDC',
+  showLocal = true,
   className,
   size = 'md',
 }: PriceDisplayProps) {
   const { data: rates } = useExchangeRates();
+  const { selectedCountry } = useSelectedCountry();
 
-  const kesAmount = rates ? convertToKES(amount, currency, rates) : 0;
+  const localAmount = rates ? convertToLocalCurrency(amount, currency, selectedCountry, rates) : 0;
 
   const sizeClasses = {
-    sm: {
-      crypto: 'text-sm font-medium',
-      kes: 'text-xs',
-    },
-    md: {
-      crypto: 'text-base font-semibold',
-      kes: 'text-sm',
-    },
-    lg: {
-      crypto: 'text-lg font-bold',
-      kes: 'text-sm',
-    },
+    sm: { crypto: 'text-sm font-medium', local: 'text-xs' },
+    md: { crypto: 'text-base font-semibold', local: 'text-sm' },
+    lg: { crypto: 'text-lg font-bold', local: 'text-sm' },
   };
 
   return (
     <div className={cn('flex flex-col', className)}>
       <span className={cn(sizeClasses[size].crypto)}>
-        {amount} {currency}
+        ${amount.toFixed(2)}
       </span>
-      {showKES && rates && (
-        <span className={cn('text-muted-foreground', sizeClasses[size].kes)}>
-          ≈ {formatKES(kesAmount)}
+      {showLocal && rates && (
+        <span className={cn('text-muted-foreground', sizeClasses[size].local)}>
+          ≈ {formatLocalCurrency(localAmount, selectedCountry)}
         </span>
       )}
     </div>
@@ -52,28 +45,27 @@ export function PriceDisplay({
 interface PriceInlineProps {
   amount: number;
   currency?: 'AVAX' | 'USDC';
-  showKES?: boolean;
+  showLocal?: boolean;
   className?: string;
 }
 
 export function PriceInline({
   amount,
-  currency = 'AVAX',
-  showKES = true,
+  currency = 'USDC',
+  showLocal = true,
   className,
 }: PriceInlineProps) {
   const { data: rates } = useExchangeRates();
+  const { selectedCountry } = useSelectedCountry();
 
-  const kesAmount = rates ? convertToKES(amount, currency, rates) : 0;
+  const localAmount = rates ? convertToLocalCurrency(amount, currency, selectedCountry, rates) : 0;
 
   return (
     <span className={cn('inline-flex items-baseline gap-1.5', className)}>
-      <span className="font-semibold">
-        {amount} {currency}
-      </span>
-      {showKES && rates && (
+      <span className="font-semibold">${amount.toFixed(2)}</span>
+      {showLocal && rates && (
         <span className="text-sm text-muted-foreground">
-          ({formatKES(kesAmount)})
+          ({formatLocalCurrency(localAmount, selectedCountry)})
         </span>
       )}
     </span>

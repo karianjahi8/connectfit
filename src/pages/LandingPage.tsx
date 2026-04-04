@@ -1,10 +1,9 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { useAccount } from 'wagmi';
-import { Dumbbell, Shield, Zap, Globe, Star, ArrowRight, Wallet, CheckCircle } from 'lucide-react';
+import { Shield, Zap, Globe, Star, ArrowRight, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { useAuth } from '@/hooks/useAuth';
 
 const features = [
   {
@@ -37,8 +36,7 @@ const stats = [
 ];
 
 export default function LandingPage() {
-  const { isConnected } = useAccount();
-  const { openConnectModal } = useConnectModal();
+  const { isAuthenticated, login } = useAuth();
 
   return (
     <div className="min-h-screen">
@@ -66,14 +64,14 @@ export default function LandingPage() {
             </p>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              {isConnected ? (
+              {isAuthenticated ? (
                 <>
                   <Link to="/trainers"><Button variant="hero" size="xl">Browse Trainers<ArrowRight className="w-5 h-5" /></Button></Link>
                   <Link to="/install"><Button variant="glass" size="xl">Install App</Button></Link>
                 </>
               ) : (
                 <>
-                  <Button onClick={openConnectModal} variant="hero" size="xl"><Wallet className="w-5 h-5" />Connect Wallet</Button>
+                  <Button onClick={login} variant="hero" size="xl">Get Started</Button>
                   <Link to="/trainers"><Button variant="glass" size="xl">Explore Platform<ArrowRight className="w-5 h-5" /></Button></Link>
                 </>
               )}
@@ -129,9 +127,9 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { step: '01', title: 'Connect Wallet', description: 'Connect once and start exploring trainers, clubs, and merchants.' },
+              { step: '01', title: 'Sign Up', description: 'Create your account with email, Google, Apple, or phone number — no crypto knowledge needed.' },
               { step: '02', title: 'Pick Your Country', description: 'Set your region to localize discovery and currency display instantly.' },
-              { step: '03', title: 'Pay in USDC', description: 'Use stable USDC pricing while still seeing totals in your local currency.' },
+              { step: '03', title: 'Confirm Payment', description: 'Use stable USDC pricing while still seeing totals in your local currency.' },
               { step: '04', title: 'Train Anywhere', description: 'Book, shop, and check in from desktop, Android, or iPhone.' },
             ].map((item, i) => (
               <motion.div key={item.step} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
