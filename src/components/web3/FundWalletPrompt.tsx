@@ -16,7 +16,7 @@ export function FundWalletPrompt({ requiredAmount, onCancel }: FundWalletPromptP
 
   const handleAddFunds = async () => {
     if (!address) return;
-    await fundWallet(address);
+    await fundWallet({ address });
   };
 
   return (
