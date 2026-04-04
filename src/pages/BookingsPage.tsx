@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useAccount } from 'wagmi';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,6 +15,7 @@ import {
   Star,
   AlertCircle,
 } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 // Mock bookings data
 const mockBookings = [
@@ -29,7 +29,7 @@ const mockBookings = [
     time: '10:00 AM',
     sessionType: 'in-person',
     location: 'Nairobi Fitness Hub',
-    amount: 0.05,
+    amount: 25.00,
     status: 'upcoming',
   },
   {
@@ -42,7 +42,7 @@ const mockBookings = [
     time: '2:00 PM',
     sessionType: 'virtual',
     location: 'Zoom Meeting',
-    amount: 0.04,
+    amount: 18.00,
     status: 'completed',
     rating: 5,
   },
@@ -56,7 +56,7 @@ const mockBookings = [
     time: '8:00 AM',
     sessionType: 'in-person',
     location: 'Kisumu Sports Center',
-    amount: 0.06,
+    amount: 30.00,
     status: 'cancelled',
   },
 ];
@@ -64,7 +64,7 @@ const mockBookings = [
 type BookingStatus = 'upcoming' | 'completed' | 'cancelled';
 
 export default function BookingsPage() {
-  const { isConnected } = useAccount();
+  const { isAuthenticated, login } = useAuth();
   const [activeTab, setActiveTab] = useState<string>('upcoming');
 
   const getStatusIcon = (status: BookingStatus) => {
@@ -93,18 +93,19 @@ export default function BookingsPage() {
     (booking) => activeTab === 'all' || booking.status === activeTab
   );
 
-  if (!isConnected) {
+  if (!isAuthenticated) {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-16">
           <div className="text-center">
             <AlertCircle className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
             <h2 className="font-display text-2xl font-bold mb-2">
-              Wallet Not Connected
+              Sign In Required
             </h2>
             <p className="text-muted-foreground mb-6">
-              Connect your wallet to view your bookings.
+              Sign in to view your bookings.
             </p>
+            <Button variant="hero" onClick={login}>Get Started</Button>
           </div>
         </div>
       </Layout>
@@ -157,7 +158,6 @@ export default function BookingsPage() {
                     <Card className="gradient-card border-border/50 hover:shadow-medium transition-shadow">
                       <CardContent className="p-6">
                         <div className="flex flex-col md:flex-row md:items-center gap-4">
-                          {/* Trainer Info */}
                           <div className="flex items-center gap-4 flex-1">
                             <img
                               src={booking.trainer.avatar}
@@ -178,7 +178,6 @@ export default function BookingsPage() {
                             </div>
                           </div>
 
-                          {/* Session Type */}
                           <div className="flex items-center gap-2">
                             {booking.sessionType === 'virtual' ? (
                               <Video className="w-4 h-4 text-primary" />
@@ -188,7 +187,6 @@ export default function BookingsPage() {
                             <span className="text-sm">{booking.location}</span>
                           </div>
 
-                          {/* Status & Actions */}
                           <div className="flex items-center gap-4">
                             <Badge
                               variant="outline"
@@ -202,7 +200,7 @@ export default function BookingsPage() {
                             </Badge>
 
                             <span className="font-display font-bold">
-                              {booking.amount} AVAX
+                              ${booking.amount.toFixed(2)}
                             </span>
 
                             {booking.status === 'upcoming' && (
