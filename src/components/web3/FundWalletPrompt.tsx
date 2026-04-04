@@ -16,11 +16,7 @@ export function FundWalletPrompt({ requiredAmount, onCancel }: FundWalletPromptP
 
   const handleAddFunds = async () => {
     if (!address) return;
-    await fundWallet(address, {
-      chain: avalanche,
-      asset: 'USDC',
-      amount: String((requiredAmount + 2).toFixed(2)),
-    });
+    await fundWallet(address);
   };
 
   return (
@@ -34,7 +30,7 @@ export function FundWalletPrompt({ requiredAmount, onCancel }: FundWalletPromptP
         </p>
         <div className="flex flex-col gap-2">
           <Button variant="hero" onClick={handleAddFunds} className="w-full">
-            Add ${(requiredAmount + 2).toFixed(2)} with card
+            Add funds with card
           </Button>
           <Button variant="outline" onClick={onCancel} className="w-full">
             Cancel

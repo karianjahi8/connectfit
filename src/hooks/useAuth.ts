@@ -28,13 +28,12 @@ export function useAuth() {
         user.apple?.email ??
         null;
       const displayName =
-        user.google?.name ??
-        user.apple?.name ??
+        (user.google as any)?.name ??
         email?.split('@')[0] ??
         (walletAddress
           ? walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4)
           : 'FitConnect User');
-      const avatarUrl = user.google?.picture ?? null;
+      const avatarUrl = (user.google as any)?.picture ?? null;
 
       await supabase.from('profiles').upsert(
         {

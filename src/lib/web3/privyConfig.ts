@@ -15,9 +15,10 @@ export const privyConfig: PrivyClientConfig = {
   },
 
   embeddedWallets: {
-    createOnLogin: 'users-without-wallets',
-    requireUserPasswordOnCreate: false,
-    noPromptOnSignature: false,
+    ethereum: {
+      createOnLogin: 'users-without-wallets',
+    },
+    showWalletUIs: true,
   },
 
   defaultChain: avalanche,
