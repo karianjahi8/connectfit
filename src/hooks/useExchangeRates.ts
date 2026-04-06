@@ -40,7 +40,9 @@ async function fetchExchangeRates(): Promise<ExchangeRates> {
   const { data, error } = await supabase.functions.invoke('exchange-rates');
 
   if (error) {
-    console.error('Error fetching exchange rates:', error);
+    if (import.meta.env.DEV) {
+      console.error('Error fetching exchange rates:', error);
+    }
     return FALLBACK_RATES;
   }
 

@@ -253,7 +253,7 @@ export default function ProfilePage() {
 
                       <div className="space-y-2">
                         <Label htmlFor="experience">Experience</Label>
-                        <Textarea id="experience" placeholder="Describe your training experience, certifications, and approach..." className="min-h-[120px]" />
+                        <Textarea id="experience" placeholder="Describe your training experience, certifications, and approach..." className="min-h-[120px]" maxLength={1000} />
                       </div>
 
                       <Button variant="hero" className="w-full md:w-auto">Save Trainer Profile</Button>
