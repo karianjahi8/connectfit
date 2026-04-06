@@ -176,7 +176,7 @@ export default function ProfilePage() {
 
                   <div className="space-y-2">
                     <Label htmlFor="bio">Bio</Label>
-                    <Textarea id="bio" placeholder="Tell us about yourself..." className="min-h-[100px]" />
+                    <Textarea id="bio" placeholder="Tell us about yourself..." className="min-h-[100px]" maxLength={500} />
                   </div>
 
                   <div className="space-y-2">
