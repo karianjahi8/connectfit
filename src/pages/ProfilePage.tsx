@@ -166,11 +166,11 @@ export default function ProfilePage() {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="name">Full Name</Label>
-                      <Input id="name" placeholder="John Doe" />
+                      <Input id="name" placeholder="John Doe" maxLength={100} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="email">Email (optional)</Label>
-                      <Input id="email" type="email" placeholder="john@example.com" />
+                      <Input id="email" type="email" placeholder="john@example.com" maxLength={255} />
                     </div>
                   </div>
 
