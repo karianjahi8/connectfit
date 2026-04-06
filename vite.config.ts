@@ -32,6 +32,7 @@ export default defineConfig(({ mode }) => ({
       },
       workbox: {
         navigateFallbackDenylist: [/^\/~oauth/],
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
       },
     }),
     mode === "development" && componentTagger(),
