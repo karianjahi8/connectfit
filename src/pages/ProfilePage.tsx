@@ -183,7 +183,7 @@ export default function ProfilePage() {
                     <Label>Location</Label>
                     <div className="relative">
                       <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input placeholder="e.g., London, United Kingdom" className="pl-10" />
+                      <Input placeholder="e.g., London, United Kingdom" className="pl-10" maxLength={100} />
                     </div>
                   </div>
 
