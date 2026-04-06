@@ -166,24 +166,24 @@ export default function ProfilePage() {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="name">Full Name</Label>
-                      <Input id="name" placeholder="John Doe" />
+                      <Input id="name" placeholder="John Doe" maxLength={100} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="email">Email (optional)</Label>
-                      <Input id="email" type="email" placeholder="john@example.com" />
+                      <Input id="email" type="email" placeholder="john@example.com" maxLength={255} />
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="bio">Bio</Label>
-                    <Textarea id="bio" placeholder="Tell us about yourself..." className="min-h-[100px]" />
+                    <Textarea id="bio" placeholder="Tell us about yourself..." className="min-h-[100px]" maxLength={500} />
                   </div>
 
                   <div className="space-y-2">
                     <Label>Location</Label>
                     <div className="relative">
                       <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input placeholder="e.g., London, United Kingdom" className="pl-10" />
+                      <Input placeholder="e.g., London, United Kingdom" className="pl-10" maxLength={100} />
                     </div>
                   </div>
 
@@ -253,7 +253,7 @@ export default function ProfilePage() {
 
                       <div className="space-y-2">
                         <Label htmlFor="experience">Experience</Label>
-                        <Textarea id="experience" placeholder="Describe your training experience, certifications, and approach..." className="min-h-[120px]" />
+                        <Textarea id="experience" placeholder="Describe your training experience, certifications, and approach..." className="min-h-[120px]" maxLength={1000} />
                       </div>
 
                       <Button variant="hero" className="w-full md:w-auto">Save Trainer Profile</Button>

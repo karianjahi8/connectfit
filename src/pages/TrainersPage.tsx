@@ -112,7 +112,7 @@ export default function TrainersPage() {
         <div className="grid gap-4 md:grid-cols-[1fr_240px] mb-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-            <Input placeholder="Search by name, specialty, or location..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-12 h-12 text-base" />
+            <Input placeholder="Search by name, specialty, or location..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value.slice(0, 100))} className="pl-12 h-12 text-base" maxLength={100} />
           </motion.div>
           <Select value={selectedCountry} onValueChange={setSelectedCountry}>
             <SelectTrigger className="h-12">
