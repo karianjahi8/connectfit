@@ -84,43 +84,28 @@ serve(async (req) => {
   }
 
   try {
-    const body = await req.json();
-    
-    // Input validation
-    const messages = body?.messages;
-    const conversationId = body?.conversationId;
-    const sessionId = body?.sessionId;
-    const currentPage = typeof body?.currentPage === "string" ? body.currentPage.slice(0, 200) : "/";
-    const userId = body?.userId;
+    const MessageSchema = z.object({
+      role: z.enum(["user", "assistant", "system"]),
+      content: z.string().min(1).max(5000),
+    });
 
-    if (!Array.isArray(messages) || messages.length === 0 || messages.length > 50) {
-      return new Response(JSON.stringify({ error: "Invalid messages" }), {
+    const BodySchema = z.object({
+      messages: z.array(MessageSchema).min(1).max(50),
+      conversationId: z.string().uuid().optional().nullable(),
+      sessionId: z.string().max(200).optional().nullable(),
+      currentPage: z.string().max(200).optional().default("/"),
+      userId: z.string().max(200).optional().nullable(),
+    });
+
+    const parsed = BodySchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten().fieldErrors }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Validate each message
-    for (const msg of messages) {
-      if (!msg || typeof msg.role !== "string" || typeof msg.content !== "string") {
-        return new Response(JSON.stringify({ error: "Invalid message format" }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (!["user", "assistant", "system"].includes(msg.role)) {
-        return new Response(JSON.stringify({ error: "Invalid message role" }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (msg.content.length > 5000) {
-        return new Response(JSON.stringify({ error: "Message too long" }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-    }
+    const { messages, conversationId: inputConvId, sessionId, currentPage, userId } = parsed.data;
     
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
