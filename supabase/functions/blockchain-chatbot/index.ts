@@ -115,7 +115,7 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Create or update conversation record
-    let convId = conversationId;
+    let convId = inputConvId;
     if (!convId) {
       const { data: conv, error: convError } = await supabase
         .from("chatbot_conversations")
