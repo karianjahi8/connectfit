@@ -18,7 +18,7 @@ interface Web3ProviderProps {
 export function Web3Provider({ children }: Web3ProviderProps) {
   return (
     <PrivyProvider
-      appId={import.meta.env.VITE_PRIVY_APP_ID || 'placeholder-app-id'}
+      appId={import.meta.env.VITE_PRIVY_APP_ID || 'cmndkky3c00kq0cjxazh484ab'}
       config={privyConfig}
     >
       <QueryClientProvider client={queryClient}>
