@@ -16,7 +16,7 @@ export const PLATFORM_CONFIG = {
   cancellationFeePercent: 10,
 } as const;
 
-// Contract addresses
+// Contract addresses — replace with real deployed addresses before production
 export const CONTRACTS = {
   fuji: {
     bookingEscrow: '0x0000000000000000000000000000000000000000',
@@ -27,3 +27,25 @@ export const CONTRACTS = {
     trainerRegistry: '0x0000000000000000000000000000000000000000',
   },
 } as const;
+
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+
+/**
+ * Returns true if contracts are deployed (not zero-address placeholders).
+ * UI must check this before allowing any on-chain transaction.
+ */
+export function areContractsDeployed(network: 'fuji' | 'mainnet' = 'fuji'): boolean {
+  const addrs = CONTRACTS[network];
+  return addrs.bookingEscrow !== ZERO_ADDRESS && addrs.trainerRegistry !== ZERO_ADDRESS;
+}
+
+/**
+ * Throws if contracts haven't been deployed yet — call before signing any tx.
+ */
+export function requireDeployedContracts(network: 'fuji' | 'mainnet' = 'fuji'): void {
+  if (!areContractsDeployed(network)) {
+    throw new Error(
+      'Smart contracts are not yet deployed. On-chain payments are unavailable until contracts are deployed to Avalanche.'
+    );
+  }
+}
