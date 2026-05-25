@@ -12,6 +12,7 @@ import { format } from 'date-fns';
 import { useExchangeRates, convertToLocalCurrency, formatLocalCurrency } from '@/hooks/useExchangeRates';
 import { COUNTRIES, getCountryName } from '@/lib/countries';
 import { useSelectedCountry } from '@/hooks/useSelectedCountry';
+import { LocationMap } from '@/components/maps/LocationMap';
 
 const mockClubs = [
   {
