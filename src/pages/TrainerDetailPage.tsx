@@ -25,6 +25,7 @@ import { toast } from 'sonner';
 import { useExchangeRates, convertToLocalCurrency, formatLocalCurrency } from '@/hooks/useExchangeRates';
 import { useSelectedCountry } from '@/hooks/useSelectedCountry';
 import { useAuth } from '@/hooks/useAuth';
+import { LocationMap } from '@/components/maps/LocationMap';
 
 // Mock trainer data
 const mockTrainer = {
