@@ -25,6 +25,7 @@ import { toast } from 'sonner';
 import { useExchangeRates, convertToLocalCurrency, formatLocalCurrency } from '@/hooks/useExchangeRates';
 import { useSelectedCountry } from '@/hooks/useSelectedCountry';
 import { useAuth } from '@/hooks/useAuth';
+import { LocationMap } from '@/components/maps/LocationMap';
 
 // Mock trainer data
 const mockTrainer = {
@@ -169,6 +170,15 @@ export default function TrainerDetailPage() {
                       </div>
                     </div>
                   )}
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+              <Card className="gradient-card border-border/50">
+                <CardHeader><CardTitle className="font-display flex items-center gap-2"><MapPin className="w-5 h-5" />Location</CardTitle></CardHeader>
+                <CardContent>
+                  <LocationMap address={trainer.location} label={trainer.location} />
                 </CardContent>
               </Card>
             </motion.div>

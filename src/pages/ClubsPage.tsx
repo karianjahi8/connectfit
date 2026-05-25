@@ -12,6 +12,7 @@ import { format } from 'date-fns';
 import { useExchangeRates, convertToLocalCurrency, formatLocalCurrency } from '@/hooks/useExchangeRates';
 import { COUNTRIES, getCountryName } from '@/lib/countries';
 import { useSelectedCountry } from '@/hooks/useSelectedCountry';
+import { LocationMap } from '@/components/maps/LocationMap';
 
 const mockClubs = [
   {
@@ -163,6 +164,10 @@ export default function ClubsPage() {
                   </CardHeader>
 
                   <CardContent className="pt-0">
+                    <div className="mb-6">
+                      <LocationMap address={`${club.location}, ${getCountryName(club.country)}`} label={club.location} height={220} />
+                    </div>
+
                     <div className="flex items-center gap-2 mb-4"><CalendarDays className="w-4 h-4 text-primary" /><h3 className="font-semibold">Upcoming Events</h3><Badge variant="secondary" className="text-xs">{filteredEvents.length}</Badge></div>
 
                     {filteredEvents.length > 0 ? (
