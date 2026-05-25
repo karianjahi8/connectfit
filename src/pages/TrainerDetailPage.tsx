@@ -173,6 +173,15 @@ export default function TrainerDetailPage() {
               </Card>
             </motion.div>
 
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+              <Card className="gradient-card border-border/50">
+                <CardHeader><CardTitle className="font-display flex items-center gap-2"><MapPin className="w-5 h-5" />Location</CardTitle></CardHeader>
+                <CardContent>
+                  <LocationMap address={trainer.location} label={trainer.location} />
+                </CardContent>
+              </Card>
+            </motion.div>
+
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
               <Card className="gradient-card border-border/50">
                 <CardHeader><CardTitle className="font-display flex items-center gap-2"><Star className="w-5 h-5" />Reviews</CardTitle></CardHeader>
