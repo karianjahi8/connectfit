@@ -271,40 +271,61 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
           city: string | null
           country: string | null
           created_at: string
+          email: string | null
+          fitness_goals: string[] | null
           full_name: string | null
           id: string
+          is_trainer: boolean
           latitude: number | null
           longitude: number | null
           phone: string | null
+          trainer_experience: string | null
+          trainer_rate_usdc: number | null
+          trainer_specialties: string[] | null
           updated_at: string
           wallet_address: string | null
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
           city?: string | null
           country?: string | null
           created_at?: string
+          email?: string | null
+          fitness_goals?: string[] | null
           full_name?: string | null
           id: string
+          is_trainer?: boolean
           latitude?: number | null
           longitude?: number | null
           phone?: string | null
+          trainer_experience?: string | null
+          trainer_rate_usdc?: number | null
+          trainer_specialties?: string[] | null
           updated_at?: string
           wallet_address?: string | null
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
           city?: string | null
           country?: string | null
           created_at?: string
+          email?: string | null
+          fitness_goals?: string[] | null
           full_name?: string | null
           id?: string
+          is_trainer?: boolean
           latitude?: number | null
           longitude?: number | null
           phone?: string | null
+          trainer_experience?: string | null
+          trainer_rate_usdc?: number | null
+          trainer_specialties?: string[] | null
           updated_at?: string
           wallet_address?: string | null
         }
