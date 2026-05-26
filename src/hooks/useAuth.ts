@@ -1,4 +1,4 @@
-import { usePrivy } from '@privy-io/react-auth';
+import { getAccessToken, usePrivy } from '@privy-io/react-auth';
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -16,38 +16,32 @@ export function useAuth() {
     exportWallet,
   } = usePrivy();
 
-  // Sync Privy user identity to Supabase profiles table
+  // Sync Privy identity into profiles via the secure edge function.
   useEffect(() => {
     if (!ready || !authenticated || !user) return;
-
-    const syncProfile = async () => {
-      const walletAddress = user.wallet?.address ?? null;
-      const email =
-        user.email?.address ??
-        user.google?.email ??
-        user.apple?.email ??
-        null;
-      const displayName =
-        (user.google as any)?.name ??
-        email?.split('@')[0] ??
-        (walletAddress
-          ? walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4)
-          : 'FitConnect User');
-      const avatarUrl = (user.google as any)?.picture ?? null;
-
-      await supabase.from('profiles').upsert(
-        {
-          id: user.id,
-          wallet_address: walletAddress,
-          full_name: displayName,
-          avatar_url: avatarUrl,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: 'id' }
-      );
-    };
-
-    syncProfile();
+    let cancelled = false;
+    (async () => {
+      try {
+        const walletAddress = user.wallet?.address ?? null;
+        const email =
+          user.email?.address ?? user.google?.email ?? user.apple?.email ?? null;
+        const displayName =
+          (user.google as any)?.name ??
+          email?.split('@')[0] ??
+          (walletAddress
+            ? walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4)
+            : 'FitConnect User');
+        const token = await getAccessToken();
+        if (cancelled || !token) return;
+        await supabase.functions.invoke('profile-rpc', {
+          body: { action: 'save', full_name: displayName, email },
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (e) {
+        console.warn('profile sync failed', e);
+      }
+    })();
+    return () => { cancelled = true; };
   }, [ready, authenticated, user]);
 
   const displayIdentity =
