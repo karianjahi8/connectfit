@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Layout } from '@/components/layout/Layout';
 import { TrainerCard } from '@/components/trainers/TrainerCard';
 import { TrainerFilters } from '@/components/trainers/TrainerFilters';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Globe } from 'lucide-react';
+import { Search, Globe, Navigation, Loader2, X } from 'lucide-react';
 import { COUNTRIES, getCountryName } from '@/lib/countries';
 import { useSelectedCountry } from '@/hooks/useSelectedCountry';
+import { useNearMe, geocodeAddress, haversineKm } from '@/hooks/useNearMe';
 
 const mockTrainers = [
   {
