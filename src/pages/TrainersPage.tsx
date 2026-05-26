@@ -164,16 +164,36 @@ export default function TrainersPage() {
           </motion.aside>
 
           <div className="flex-1">
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-sm text-muted-foreground">{filteredTrainers.length} trainers found in {getCountryName(selectedCountry)}</p>
+            <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
+              <p className="text-sm text-muted-foreground">
+                {filteredTrainers.length} trainers {origin ? 'sorted by distance from you' : `found in ${getCountryName(selectedCountry)}`}
+              </p>
+              {origin ? (
+                <Button variant="outline" size="sm" onClick={clear} className="gap-2">
+                  <X className="w-4 h-4" /> Clear "Near me"
+                </Button>
+              ) : (
+                <Button variant="outline" size="sm" onClick={locate} disabled={locating} className="gap-2">
+                  {locating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Navigation className="w-4 h-4" />}
+                  Trainers near me
+                </Button>
+              )}
             </div>
 
             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredTrainers.map((trainer, i) => (
-                <motion.div key={trainer.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}>
-                  <TrainerCard trainer={trainer} />
-                </motion.div>
-              ))}
+              {filteredTrainers.map((trainer, i) => {
+                const d = distances[trainer.id];
+                return (
+                  <motion.div key={trainer.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
+                    <TrainerCard trainer={trainer} />
+                    {origin && Number.isFinite(d) && (
+                      <p className="mt-2 text-xs text-muted-foreground flex items-center gap-1">
+                        <Navigation className="w-3 h-3" /> {d < 1 ? `${Math.round(d * 1000)} m` : `${d.toFixed(1)} km`} away
+                      </p>
+                    )}
+                  </motion.div>
+                );
+              })}
             </div>
 
             {filteredTrainers.length === 0 && (
