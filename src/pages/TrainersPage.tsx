@@ -80,26 +80,46 @@ export default function TrainersPage() {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 300]);
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const { selectedCountry, setSelectedCountry } = useSelectedCountry();
+  const { origin, locating, locate, clear } = useNearMe();
+  const [distances, setDistances] = useState<Record<string, number>>({});
 
-  const filteredTrainers = mockTrainers.filter((trainer) => {
+  // When origin is set, geocode all trainer locations and compute distance.
+  useEffect(() => {
+    if (!origin) { setDistances({}); return; }
+    let cancelled = false;
+    (async () => {
+      const entries = await Promise.all(
+        mockTrainers.map(async (t) => {
+          const coords = await geocodeAddress(t.location);
+          if (!coords) return [t.id, Infinity] as const;
+          return [t.id, haversineKm(origin, coords)] as const;
+        })
+      );
+      if (!cancelled) setDistances(Object.fromEntries(entries));
+    })();
+    return () => { cancelled = true; };
+  }, [origin]);
+
+  const baseFiltered = mockTrainers.filter((trainer) => {
     const matchesSearch =
       trainer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       trainer.bio.toLowerCase().includes(searchQuery.toLowerCase()) ||
       trainer.location.toLowerCase().includes(searchQuery.toLowerCase());
-
     const matchesSpecialties =
       selectedSpecialties.length === 0 ||
       trainer.specialties.some((s) => selectedSpecialties.includes(s));
-
     const matchesPrice =
       (trainer.physicalRate >= priceRange[0] && trainer.physicalRate <= priceRange[1]) ||
       (trainer.virtualRate >= priceRange[0] && trainer.virtualRate <= priceRange[1]);
-
     const matchesVerified = !verifiedOnly || trainer.isVerified;
-    const matchesCountry = trainer.country === selectedCountry;
-
+    // When "Near me" is active, ignore country filter so global proximity works.
+    const matchesCountry = origin ? true : trainer.country === selectedCountry;
     return matchesSearch && matchesSpecialties && matchesPrice && matchesVerified && matchesCountry;
   });
+
+  const filteredTrainers = origin
+    ? [...baseFiltered].sort((a, b) => (distances[a.id] ?? Infinity) - (distances[b.id] ?? Infinity))
+    : baseFiltered;
 
   return (
     <Layout>
