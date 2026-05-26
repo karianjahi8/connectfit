@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Layout } from '@/components/layout/Layout';
 import { TrainerCard } from '@/components/trainers/TrainerCard';
 import { TrainerFilters } from '@/components/trainers/TrainerFilters';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Globe } from 'lucide-react';
+import { Search, Globe, Navigation, Loader2, X } from 'lucide-react';
 import { COUNTRIES, getCountryName } from '@/lib/countries';
 import { useSelectedCountry } from '@/hooks/useSelectedCountry';
+import { useNearMe, geocodeAddress, haversineKm } from '@/hooks/useNearMe';
 
 const mockTrainers = [
   {
@@ -78,26 +80,46 @@ export default function TrainersPage() {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 300]);
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const { selectedCountry, setSelectedCountry } = useSelectedCountry();
+  const { origin, locating, locate, clear } = useNearMe();
+  const [distances, setDistances] = useState<Record<string, number>>({});
 
-  const filteredTrainers = mockTrainers.filter((trainer) => {
+  // When origin is set, geocode all trainer locations and compute distance.
+  useEffect(() => {
+    if (!origin) { setDistances({}); return; }
+    let cancelled = false;
+    (async () => {
+      const entries = await Promise.all(
+        mockTrainers.map(async (t) => {
+          const coords = await geocodeAddress(t.location);
+          if (!coords) return [t.id, Infinity] as const;
+          return [t.id, haversineKm(origin, coords)] as const;
+        })
+      );
+      if (!cancelled) setDistances(Object.fromEntries(entries));
+    })();
+    return () => { cancelled = true; };
+  }, [origin]);
+
+  const baseFiltered = mockTrainers.filter((trainer) => {
     const matchesSearch =
       trainer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       trainer.bio.toLowerCase().includes(searchQuery.toLowerCase()) ||
       trainer.location.toLowerCase().includes(searchQuery.toLowerCase());
-
     const matchesSpecialties =
       selectedSpecialties.length === 0 ||
       trainer.specialties.some((s) => selectedSpecialties.includes(s));
-
     const matchesPrice =
       (trainer.physicalRate >= priceRange[0] && trainer.physicalRate <= priceRange[1]) ||
       (trainer.virtualRate >= priceRange[0] && trainer.virtualRate <= priceRange[1]);
-
     const matchesVerified = !verifiedOnly || trainer.isVerified;
-    const matchesCountry = trainer.country === selectedCountry;
-
+    // When "Near me" is active, ignore country filter so global proximity works.
+    const matchesCountry = origin ? true : trainer.country === selectedCountry;
     return matchesSearch && matchesSpecialties && matchesPrice && matchesVerified && matchesCountry;
   });
+
+  const filteredTrainers = origin
+    ? [...baseFiltered].sort((a, b) => (distances[a.id] ?? Infinity) - (distances[b.id] ?? Infinity))
+    : baseFiltered;
 
   return (
     <Layout>
@@ -142,16 +164,36 @@ export default function TrainersPage() {
           </motion.aside>
 
           <div className="flex-1">
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-sm text-muted-foreground">{filteredTrainers.length} trainers found in {getCountryName(selectedCountry)}</p>
+            <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
+              <p className="text-sm text-muted-foreground">
+                {filteredTrainers.length} trainers {origin ? 'sorted by distance from you' : `found in ${getCountryName(selectedCountry)}`}
+              </p>
+              {origin ? (
+                <Button variant="outline" size="sm" onClick={clear} className="gap-2">
+                  <X className="w-4 h-4" /> Clear "Near me"
+                </Button>
+              ) : (
+                <Button variant="outline" size="sm" onClick={locate} disabled={locating} className="gap-2">
+                  {locating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Navigation className="w-4 h-4" />}
+                  Trainers near me
+                </Button>
+              )}
             </div>
 
             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredTrainers.map((trainer, i) => (
-                <motion.div key={trainer.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}>
-                  <TrainerCard trainer={trainer} />
-                </motion.div>
-              ))}
+              {filteredTrainers.map((trainer, i) => {
+                const d = distances[trainer.id];
+                return (
+                  <motion.div key={trainer.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
+                    <TrainerCard trainer={trainer} />
+                    {origin && Number.isFinite(d) && (
+                      <p className="mt-2 text-xs text-muted-foreground flex items-center gap-1">
+                        <Navigation className="w-3 h-3" /> {d < 1 ? `${Math.round(d * 1000)} m` : `${d.toFixed(1)} km`} away
+                      </p>
+                    )}
+                  </motion.div>
+                );
+              })}
             </div>
 
             {filteredTrainers.length === 0 && (
