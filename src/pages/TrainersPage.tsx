@@ -77,6 +77,7 @@ const mockTrainers = [
 ];
 
 export default function TrainersPage() {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 300]);
@@ -84,6 +85,7 @@ export default function TrainersPage() {
   const { selectedCountry, setSelectedCountry } = useSelectedCountry();
   const { origin, locating, locate, clear } = useNearMe();
   const [distances, setDistances] = useState<Record<string, number>>({});
+  const [view, setView] = useState<'list' | 'map'>('list');
 
   // When origin is set, geocode all trainer locations and compute distance.
   useEffect(() => {
