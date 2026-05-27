@@ -17,7 +17,6 @@ let mapsLoader: Promise<void> | null = null;
 
 function loadMapsApi(): Promise<void> {
   if (typeof window === 'undefined') return Promise.reject(new Error('No window'));
-  if (window.google?.maps) return Promise.resolve();
   if (mapsLoader) return mapsLoader;
 
   mapsLoader = new Promise<void>((resolve, reject) => {
@@ -25,10 +24,22 @@ function loadMapsApi(): Promise<void> {
       reject(new Error('Google Maps browser key missing'));
       return;
     }
+    if (window.google?.maps?.importLibrary) {
+      resolve();
+      return;
+    }
     window.__fitconnectInitMap = () => resolve();
+    const existing = document.querySelector('script[data-fitconnect-gmaps]');
+    if (existing) {
+      existing.addEventListener('load', () => resolve());
+      existing.addEventListener('error', () => reject(new Error('Failed to load Google Maps')));
+      return;
+    }
     const script = document.createElement('script');
+    script.setAttribute('data-fitconnect-gmaps', 'true');
     const params = new URLSearchParams({
       key: BROWSER_KEY,
+      v: 'weekly',
       loading: 'async',
       callback: '__fitconnectInitMap',
     });
@@ -72,10 +83,13 @@ export function LocationMap({ address, label, height = 280, className }: Locatio
         setCoords(data.location);
 
         await loadMapsApi();
-        if (cancelled || !containerRef.current || !window.google?.maps) return;
+        if (cancelled || !containerRef.current || !window.google?.maps?.importLibrary) return;
+
+        const { Map } = (await window.google.maps.importLibrary('maps')) as any;
+        const { Marker } = (await window.google.maps.importLibrary('marker')) as any;
 
         const center = { lat: data.location.lat, lng: data.location.lng };
-        const map = new window.google.maps.Map(containerRef.current, {
+        const map = new Map(containerRef.current, {
           center,
           zoom: 14,
           disableDefaultUI: false,
@@ -83,7 +97,7 @@ export function LocationMap({ address, label, height = 280, className }: Locatio
           streetViewControl: false,
           fullscreenControl: true,
         });
-        new window.google.maps.Marker({
+        new Marker({
           position: center,
           map,
           title: label ?? address,
