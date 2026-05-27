@@ -17,7 +17,6 @@ let mapsLoader: Promise<void> | null = null;
 
 function loadMapsApi(): Promise<void> {
   if (typeof window === 'undefined') return Promise.reject(new Error('No window'));
-  if (window.google?.maps) return Promise.resolve();
   if (mapsLoader) return mapsLoader;
 
   mapsLoader = new Promise<void>((resolve, reject) => {
@@ -25,10 +24,22 @@ function loadMapsApi(): Promise<void> {
       reject(new Error('Google Maps browser key missing'));
       return;
     }
+    if (window.google?.maps?.importLibrary) {
+      resolve();
+      return;
+    }
     window.__fitconnectInitMap = () => resolve();
+    const existing = document.querySelector('script[data-fitconnect-gmaps]');
+    if (existing) {
+      existing.addEventListener('load', () => resolve());
+      existing.addEventListener('error', () => reject(new Error('Failed to load Google Maps')));
+      return;
+    }
     const script = document.createElement('script');
+    script.setAttribute('data-fitconnect-gmaps', 'true');
     const params = new URLSearchParams({
       key: BROWSER_KEY,
+      v: 'weekly',
       loading: 'async',
       callback: '__fitconnectInitMap',
     });
