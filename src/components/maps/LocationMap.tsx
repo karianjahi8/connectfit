@@ -83,10 +83,13 @@ export function LocationMap({ address, label, height = 280, className }: Locatio
         setCoords(data.location);
 
         await loadMapsApi();
-        if (cancelled || !containerRef.current || !window.google?.maps) return;
+        if (cancelled || !containerRef.current || !window.google?.maps?.importLibrary) return;
+
+        const { Map } = (await window.google.maps.importLibrary('maps')) as any;
+        const { Marker } = (await window.google.maps.importLibrary('marker')) as any;
 
         const center = { lat: data.location.lat, lng: data.location.lng };
-        const map = new window.google.maps.Map(containerRef.current, {
+        const map = new Map(containerRef.current, {
           center,
           zoom: 14,
           disableDefaultUI: false,
@@ -94,7 +97,7 @@ export function LocationMap({ address, label, height = 280, className }: Locatio
           streetViewControl: false,
           fullscreenControl: true,
         });
-        new window.google.maps.Marker({
+        new Marker({
           position: center,
           map,
           title: label ?? address,
