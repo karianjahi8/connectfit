@@ -172,33 +172,51 @@ export default function TrainersPage() {
               <p className="text-sm text-muted-foreground">
                 {filteredTrainers.length} trainers {origin ? 'sorted by distance from you' : `found in ${getCountryName(selectedCountry)}`}
               </p>
-              {origin ? (
-                <Button variant="outline" size="sm" onClick={clear} className="gap-2">
-                  <X className="w-4 h-4" /> Clear "Near me"
-                </Button>
-              ) : (
-                <Button variant="outline" size="sm" onClick={locate} disabled={locating} className="gap-2">
-                  {locating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Navigation className="w-4 h-4" />}
-                  Trainers near me
-                </Button>
-              )}
+              <div className="flex items-center gap-2 flex-wrap">
+                <div className="inline-flex rounded-md border border-border/60 overflow-hidden">
+                  <Button variant={view === 'list' ? 'secondary' : 'ghost'} size="sm" onClick={() => setView('list')} className="gap-1.5 rounded-none">
+                    <List className="w-4 h-4" /> List
+                  </Button>
+                  <Button variant={view === 'map' ? 'secondary' : 'ghost'} size="sm" onClick={() => setView('map')} className="gap-1.5 rounded-none">
+                    <MapIcon className="w-4 h-4" /> Map
+                  </Button>
+                </div>
+                {origin ? (
+                  <Button variant="outline" size="sm" onClick={clear} className="gap-2">
+                    <X className="w-4 h-4" /> Clear "Near me"
+                  </Button>
+                ) : (
+                  <Button variant="outline" size="sm" onClick={locate} disabled={locating} className="gap-2">
+                    {locating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Navigation className="w-4 h-4" />}
+                    Trainers near me
+                  </Button>
+                )}
+              </div>
             </div>
 
-            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredTrainers.map((trainer, i) => {
-                const d = distances[trainer.id];
-                return (
-                  <motion.div key={trainer.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
-                    <TrainerCard trainer={trainer} />
-                    {origin && Number.isFinite(d) && (
-                      <p className="mt-2 text-xs text-muted-foreground flex items-center gap-1">
-                        <Navigation className="w-3 h-3" /> {d < 1 ? `${Math.round(d * 1000)} m` : `${d.toFixed(1)} km`} away
-                      </p>
-                    )}
-                  </motion.div>
-                );
-              })}
-            </div>
+            {view === 'map' ? (
+              <TrainersMap
+                trainers={filteredTrainers.map((t) => ({ id: t.id, name: t.name, location: t.location }))}
+                origin={origin}
+                onSelect={(id) => navigate(`/trainers/${id}`)}
+              />
+            ) : (
+              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredTrainers.map((trainer, i) => {
+                  const d = distances[trainer.id];
+                  return (
+                    <motion.div key={trainer.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
+                      <TrainerCard trainer={trainer} />
+                      {origin && Number.isFinite(d) && (
+                        <p className="mt-2 text-xs text-muted-foreground flex items-center gap-1">
+                          <Navigation className="w-3 h-3" /> {d < 1 ? `${Math.round(d * 1000)} m` : `${d.toFixed(1)} km`} away
+                        </p>
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}
 
             {filteredTrainers.length === 0 && (
               <div className="text-center py-16">
