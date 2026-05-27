@@ -6,10 +6,12 @@ import { TrainerFilters } from '@/components/trainers/TrainerFilters';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Globe, Navigation, Loader2, X } from 'lucide-react';
+import { Search, Globe, Navigation, Loader2, X, Map as MapIcon, List } from 'lucide-react';
 import { COUNTRIES, getCountryName } from '@/lib/countries';
 import { useSelectedCountry } from '@/hooks/useSelectedCountry';
 import { useNearMe, geocodeAddress, haversineKm } from '@/hooks/useNearMe';
+import { TrainersMap } from '@/components/maps/TrainersMap';
+import { useNavigate } from 'react-router-dom';
 
 const mockTrainers = [
   {
