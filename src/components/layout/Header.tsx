@@ -88,7 +88,7 @@ export function Header() {
 
       {/* Mobile Navigation */}
       <nav className="lg:hidden border-t border-border/50 bg-background/95 backdrop-blur-sm">
-        <div className="flex justify-around py-2">
+        <div className="grid grid-cols-6 py-1.5">
           {navLinks.map(({ to, label, icon: Icon }) => {
             const isActive = location.pathname === to;
             return (
@@ -96,14 +96,14 @@ export function Header() {
                 key={to}
                 to={to}
                 className={cn(
-                  'flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors',
+                  'flex flex-col items-center gap-0.5 px-1 py-1.5 rounded-lg transition-colors min-w-0',
                   isActive
                     ? 'text-primary'
                     : 'text-muted-foreground hover:text-foreground'
                 )}
               >
-                <Icon className="w-5 h-5" />
-                <span className="text-xs font-medium">{label}</span>
+                <Icon className="w-5 h-5 shrink-0" />
+                <span className="text-[10px] font-medium truncate max-w-full">{label}</span>
               </Link>
             );
           })}
