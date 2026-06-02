@@ -119,7 +119,7 @@ serve(async (req) => {
       const { data: conv, error: convError } = await supabase
         .from("chatbot_conversations")
         .insert({
-          user_id: userId || null,
+          user_id: null,
           session_id: sessionId || crypto.randomUUID(),
           current_page: currentPage || "/",
         })
