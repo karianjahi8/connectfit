@@ -50,7 +50,6 @@ export function useChatbot() {
           conversationId,
           sessionId: sessionIdRef.current,
           currentPage: location.pathname,
-          userId: user?.id || null,
         }),
       });
 
