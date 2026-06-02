@@ -85,9 +85,8 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Unknown error';
-    console.error('profile-rpc error:', msg);
-    return new Response(JSON.stringify({ error: msg }), {
+    console.error('profile-rpc error:', e);
+    return new Response(JSON.stringify({ error: 'Profile operation failed' }), {
       status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
