@@ -217,7 +217,7 @@ serve(async (req) => {
     return new Response(response.body, { headers });
   } catch (e) {
     console.error("chatbot error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
+    return new Response(JSON.stringify({ error: "Chatbot service unavailable" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
