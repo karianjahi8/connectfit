@@ -85,7 +85,7 @@ serve(async (req) => {
 
   try {
     const MessageSchema = z.object({
-      role: z.enum(["user", "assistant", "system"]),
+      role: z.enum(["user", "assistant"]),
       content: z.string().min(1).max(5000),
     });
 
@@ -94,18 +94,17 @@ serve(async (req) => {
       conversationId: z.string().uuid().optional().nullable(),
       sessionId: z.string().max(200).optional().nullable(),
       currentPage: z.string().max(200).optional().default("/"),
-      userId: z.string().max(200).optional().nullable(),
     });
 
     const parsed = BodySchema.safeParse(await req.json());
     if (!parsed.success) {
-      return new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten().fieldErrors }), {
+      return new Response(JSON.stringify({ error: "Invalid input" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const { messages, conversationId: inputConvId, sessionId, currentPage, userId } = parsed.data;
+    const { messages, conversationId: inputConvId, sessionId, currentPage } = parsed.data;
     
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
@@ -120,7 +119,7 @@ serve(async (req) => {
       const { data: conv, error: convError } = await supabase
         .from("chatbot_conversations")
         .insert({
-          user_id: userId || null,
+          user_id: null,
           session_id: sessionId || crypto.randomUUID(),
           current_page: currentPage || "/",
         })
@@ -218,7 +217,7 @@ serve(async (req) => {
     return new Response(response.body, { headers });
   } catch (e) {
     console.error("chatbot error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
+    return new Response(JSON.stringify({ error: "Chatbot service unavailable" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

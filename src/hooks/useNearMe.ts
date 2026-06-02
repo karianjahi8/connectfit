@@ -1,10 +1,11 @@
 import { useCallback, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { getAccessToken } from '@privy-io/react-auth';
 import { toast } from 'sonner';
 
 type Coords = { lat: number; lng: number };
 
 const cache = new Map<string, Coords>();
+const GEOCODE_URL = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/geocode`;
 
 export function haversineKm(a: Coords, b: Coords) {
   const R = 6371;
@@ -20,9 +21,20 @@ export function haversineKm(a: Coords, b: Coords) {
 export async function geocodeAddress(address: string): Promise<Coords | null> {
   if (cache.has(address)) return cache.get(address)!;
   try {
-    const { data, error } = await supabase.functions.invoke('geocode', { body: { address } });
-    if (error) throw error;
-    const loc = (data as any)?.location;
+    const token = await getAccessToken();
+    if (!token) return null;
+    const res = await fetch(GEOCODE_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+      },
+      body: JSON.stringify({ address }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const loc = data?.location;
     if (!loc) return null;
     const coords = { lat: loc.lat, lng: loc.lng };
     cache.set(address, coords);

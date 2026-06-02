@@ -210,6 +210,13 @@ export type Database = {
             referencedRelation: "vendors"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "orders_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       products: {
@@ -264,6 +271,13 @@ export type Database = {
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors_public"
             referencedColumns: ["id"]
           },
         ]
@@ -399,24 +413,93 @@ export type Database = {
       profiles_public: {
         Row: {
           avatar_url: string | null
+          bio: string | null
           city: string | null
           country: string | null
+          created_at: string | null
+          fitness_goals: string[] | null
           full_name: string | null
           id: string | null
+          is_trainer: boolean | null
+          trainer_experience: string | null
+          trainer_rate_usdc: number | null
+          trainer_specialties: string[] | null
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
           city?: string | null
           country?: string | null
+          created_at?: string | null
+          fitness_goals?: string[] | null
           full_name?: string | null
           id?: string | null
+          is_trainer?: boolean | null
+          trainer_experience?: string | null
+          trainer_rate_usdc?: number | null
+          trainer_specialties?: string[] | null
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
           city?: string | null
           country?: string | null
+          created_at?: string | null
+          fitness_goals?: string[] | null
           full_name?: string | null
           id?: string | null
+          is_trainer?: boolean | null
+          trainer_experience?: string | null
+          trainer_rate_usdc?: number | null
+          trainer_specialties?: string[] | null
+        }
+        Relationships: []
+      }
+      vendors_public: {
+        Row: {
+          business_name: string | null
+          city: string | null
+          country: string | null
+          created_at: string | null
+          description: string | null
+          id: string | null
+          latitude: number | null
+          location: string | null
+          logo_url: string | null
+          longitude: number | null
+          onchain_verified: boolean | null
+          status: Database["public"]["Enums"]["vendor_status"] | null
+          verified_at: string | null
+        }
+        Insert: {
+          business_name?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          latitude?: number | null
+          location?: string | null
+          logo_url?: string | null
+          longitude?: number | null
+          onchain_verified?: boolean | null
+          status?: Database["public"]["Enums"]["vendor_status"] | null
+          verified_at?: string | null
+        }
+        Update: {
+          business_name?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          latitude?: number | null
+          location?: string | null
+          logo_url?: string | null
+          longitude?: number | null
+          onchain_verified?: boolean | null
+          status?: Database["public"]["Enums"]["vendor_status"] | null
+          verified_at?: string | null
         }
         Relationships: []
       }
