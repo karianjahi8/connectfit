@@ -16,6 +16,8 @@ import CheckoutPage from "./pages/CheckoutPage";
 import VendorDashboardPage from "./pages/VendorDashboardPage";
 import InstallPage from "./pages/InstallPage";
 import AuthPage from "./pages/AuthPage";
+import PrivacyPage from "./pages/PrivacyPage";
+import TermsPage from "./pages/TermsPage";
 import NotFound from "./pages/NotFound";
 import { ChatWidget } from "./components/chatbot/ChatWidget";
 
