@@ -1,18 +1,21 @@
 import { ReactNode } from 'react';
 import { Header } from './Header';
+import { Footer } from './Footer';
 
 interface LayoutProps {
   children: ReactNode;
   showHeader?: boolean;
+  showFooter?: boolean;
 }
 
-export function Layout({ children, showHeader = true }: LayoutProps) {
+export function Layout({ children, showHeader = true, showFooter = true }: LayoutProps) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       {showHeader && <Header />}
-      <main className={showHeader ? 'pt-28 lg:pt-20' : ''}>
+      <main className={`flex-1 ${showHeader ? 'pt-28 lg:pt-20' : ''}`}>
         {children}
       </main>
+      {showFooter && <Footer />}
     </div>
   );
 }
