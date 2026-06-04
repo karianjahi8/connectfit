@@ -42,6 +42,8 @@ const App = () => (
           <Route path="/vendor" element={<VendorDashboardPage />} />
           <Route path="/install" element={<InstallPage />} />
           <Route path="/auth" element={<AuthPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <ChatWidget />
