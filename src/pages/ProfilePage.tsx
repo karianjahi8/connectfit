@@ -146,6 +146,27 @@ export default function ProfilePage() {
         </Card>
 
         <Card className="gradient-card border-border/50 mb-6">
+          <CardContent className="p-6 flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-xl bg-warning/15 flex items-center justify-center">
+                <Flame className="w-7 h-7 text-warning" />
+              </div>
+              <div>
+                <h3 className="font-display font-semibold text-lg">
+                  {streak?.current_streak ?? 0} day streak
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Longest {streak?.longest_streak ?? 0} · {streak?.total_sessions ?? 0} total sessions
+                </p>
+              </div>
+            </div>
+            <Button variant="outline" size="sm" className="gap-2" onClick={() => (window.location.href = '/activity')}>
+              <Activity className="w-4 h-4" /> View activity
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="gradient-card border-border/50 mb-6">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
