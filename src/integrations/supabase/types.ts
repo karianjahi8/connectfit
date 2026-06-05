@@ -14,6 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      activities: {
+        Row: {
+          avg_heart_rate: number | null
+          calories: number | null
+          created_at: string
+          distance_km: number | null
+          duration_minutes: number
+          ended_at: string | null
+          external_id: string | null
+          id: string
+          metadata: Json
+          notes: string | null
+          source: Database["public"]["Enums"]["activity_source"]
+          started_at: string
+          steps: number | null
+          type: Database["public"]["Enums"]["activity_type"]
+          updated_at: string
+          user_id: string
+          verified: boolean
+        }
+        Insert: {
+          avg_heart_rate?: number | null
+          calories?: number | null
+          created_at?: string
+          distance_km?: number | null
+          duration_minutes?: number
+          ended_at?: string | null
+          external_id?: string | null
+          id?: string
+          metadata?: Json
+          notes?: string | null
+          source: Database["public"]["Enums"]["activity_source"]
+          started_at: string
+          steps?: number | null
+          type: Database["public"]["Enums"]["activity_type"]
+          updated_at?: string
+          user_id: string
+          verified?: boolean
+        }
+        Update: {
+          avg_heart_rate?: number | null
+          calories?: number | null
+          created_at?: string
+          distance_km?: number | null
+          duration_minutes?: number
+          ended_at?: string | null
+          external_id?: string | null
+          id?: string
+          metadata?: Json
+          notes?: string | null
+          source?: Database["public"]["Enums"]["activity_source"]
+          started_at?: string
+          steps?: number | null
+          type?: Database["public"]["Enums"]["activity_type"]
+          updated_at?: string
+          user_id?: string
+          verified?: boolean
+        }
+        Relationships: []
+      }
       cart_items: {
         Row: {
           created_at: string
@@ -116,6 +176,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      gym_checkins: {
+        Row: {
+          checked_in_at: string
+          checked_out_at: string | null
+          club_id: string | null
+          created_at: string
+          distance_meters: number | null
+          id: string
+          latitude: number | null
+          longitude: number | null
+          user_id: string
+          verified_location: boolean
+        }
+        Insert: {
+          checked_in_at?: string
+          checked_out_at?: string | null
+          club_id?: string | null
+          created_at?: string
+          distance_meters?: number | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          user_id: string
+          verified_location?: boolean
+        }
+        Update: {
+          checked_in_at?: string
+          checked_out_at?: string | null
+          club_id?: string | null
+          created_at?: string
+          distance_meters?: number | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          user_id?: string
+          verified_location?: boolean
+        }
+        Relationships: []
       }
       order_items: {
         Row: {
@@ -297,6 +396,7 @@ export type Database = {
           latitude: number | null
           longitude: number | null
           phone: string | null
+          timezone: string
           trainer_experience: string | null
           trainer_rate_usdc: number | null
           trainer_specialties: string[] | null
@@ -317,6 +417,7 @@ export type Database = {
           latitude?: number | null
           longitude?: number | null
           phone?: string | null
+          timezone?: string
           trainer_experience?: string | null
           trainer_rate_usdc?: number | null
           trainer_specialties?: string[] | null
@@ -337,11 +438,39 @@ export type Database = {
           latitude?: number | null
           longitude?: number | null
           phone?: string | null
+          timezone?: string
           trainer_experience?: string | null
           trainer_rate_usdc?: number | null
           trainer_specialties?: string[] | null
           updated_at?: string
           wallet_address?: string | null
+        }
+        Relationships: []
+      }
+      streak_stats: {
+        Row: {
+          current_streak: number
+          last_qualifying_date: string | null
+          longest_streak: number
+          total_sessions: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          current_streak?: number
+          last_qualifying_date?: string | null
+          longest_streak?: number
+          total_sessions?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          current_streak?: number
+          last_qualifying_date?: string | null
+          longest_streak?: number
+          total_sessions?: number
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -505,9 +634,26 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      reset_lapsed_streaks: { Args: never; Returns: undefined }
     }
     Enums: {
+      activity_source:
+        | "healthkit"
+        | "health_connect"
+        | "manual"
+        | "sensor"
+        | "geofence"
+      activity_type:
+        | "steps"
+        | "run"
+        | "cycle"
+        | "workout"
+        | "yoga"
+        | "swim"
+        | "hike"
+        | "strength"
+        | "hiit"
+        | "other"
       order_status:
         | "pending"
         | "confirmed"
@@ -645,6 +791,25 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      activity_source: [
+        "healthkit",
+        "health_connect",
+        "manual",
+        "sensor",
+        "geofence",
+      ],
+      activity_type: [
+        "steps",
+        "run",
+        "cycle",
+        "workout",
+        "yoga",
+        "swim",
+        "hike",
+        "strength",
+        "hiit",
+        "other",
+      ],
       order_status: [
         "pending",
         "confirmed",
