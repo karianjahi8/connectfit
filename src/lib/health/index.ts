@@ -49,12 +49,13 @@ export async function requestHealthPermissions(): Promise<boolean> {
       return true;
     }
     if (platform === 'android') {
-      const { HealthConnect } = await import('capacitor-health-connect');
-      const result = await HealthConnect.requestHealthPermissions({
+      const mod: any = await import('capacitor-health-connect');
+      const HealthConnect = mod.HealthConnect;
+      const result: any = await HealthConnect.requestHealthPermissions({
         read: ['Steps', 'Distance', 'TotalCaloriesBurned', 'ExerciseSession', 'HeartRate'],
         write: [],
       });
-      return result?.grantedPermissions?.length > 0;
+      return (result?.grantedPermissions?.length ?? 0) > 0;
     }
   } catch (e) {
     console.error('Health permission error', e);
