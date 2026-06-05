@@ -18,6 +18,7 @@ import InstallPage from "./pages/InstallPage";
 import AuthPage from "./pages/AuthPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
+import ActivityPage from "./pages/ActivityPage";
 import NotFound from "./pages/NotFound";
 import { ChatWidget } from "./components/chatbot/ChatWidget";
 
@@ -44,6 +45,7 @@ const App = () => (
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="/activity" element={<ActivityPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <ChatWidget />

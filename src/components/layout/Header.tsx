@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, Calendar, User, MessageCircle, Building2, ShoppingBag, ShoppingCart, Store } from 'lucide-react';
+import { Search, Calendar, User, MessageCircle, Building2, ShoppingBag, ShoppingCart, Store, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -11,6 +11,7 @@ const navLinks = [
   { to: '/trainers', label: 'Trainers', icon: Search },
   { to: '/marketplace', label: 'Market', icon: ShoppingBag },
   { to: '/clubs', label: 'Clubs', icon: Building2 },
+  { to: '/activity', label: 'Activity', icon: Activity },
   { to: '/bookings', label: 'Bookings', icon: Calendar },
   { to: '/messages', label: 'Messages', icon: MessageCircle },
   { to: '/profile', label: 'Profile', icon: User },
@@ -88,7 +89,7 @@ export function Header() {
 
       {/* Mobile Navigation */}
       <nav className="xl:hidden border-t border-border/50 bg-background/95 backdrop-blur-sm">
-        <div className="grid grid-cols-6 py-1.5">
+        <div className="grid grid-cols-7 py-1.5">
           {navLinks.map(({ to, label, icon: Icon }) => {
             const isActive = location.pathname === to;
             return (
