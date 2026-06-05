@@ -116,11 +116,12 @@ export async function readRecentHealth(daysBack = 7): Promise<HealthSample[]> {
     }
 
     if (platform === 'android') {
-      const { HealthConnect } = await import('capacitor-health-connect');
-      const time = { startTime: start.toISOString(), endTime: end.toISOString() };
+      const mod: any = await import('capacitor-health-connect');
+      const HealthConnect: any = mod.HealthConnect;
+      const time: any = { type: 'between', startTime: start, endTime: end };
 
       try {
-        const steps: any = await HealthConnect.readRecords({ type: 'Steps', timeRangeFilter: { type: 'between', ...time } });
+        const steps: any = await HealthConnect.readRecords({ type: 'Steps', timeRangeFilter: time });
         for (const r of steps?.records ?? []) {
           out.push({
             type: 'steps', source: 'health_connect',
@@ -133,7 +134,7 @@ export async function readRecentHealth(daysBack = 7): Promise<HealthSample[]> {
       } catch {}
 
       try {
-        const ex: any = await HealthConnect.readRecords({ type: 'ExerciseSession', timeRangeFilter: { type: 'between', ...time } });
+        const ex: any = await HealthConnect.readRecords({ type: 'ExerciseSession', timeRangeFilter: time });
         for (const r of ex?.records ?? []) {
           const duration = Math.max(0, Math.round((new Date(r.endTime).getTime() - new Date(r.startTime).getTime()) / 60000));
           out.push({
