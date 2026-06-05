@@ -87,7 +87,7 @@ export function Header() {
       </div>
 
       {/* Mobile Navigation */}
-      <nav className="lg:hidden border-t border-border/50 bg-background/95 backdrop-blur-sm">
+      <nav className="xl:hidden border-t border-border/50 bg-background/95 backdrop-blur-sm">
         <div className="grid grid-cols-6 py-1.5">
           {navLinks.map(({ to, label, icon: Icon }) => {
             const isActive = location.pathname === to;
