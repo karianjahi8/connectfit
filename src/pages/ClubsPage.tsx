@@ -174,9 +174,19 @@ export default function ClubsPage() {
                   </CardHeader>
 
                   <CardContent className="pt-0">
+                    <div className="mb-4 flex flex-wrap items-center justify-between gap-3 p-3 rounded-lg bg-primary/5 border border-primary/20">
+                      <div>
+                        <p className="text-sm font-semibold">Gym check-in</p>
+                        <p className="text-xs text-muted-foreground">Verified visits keep your streak alive</p>
+                      </div>
+                      <Button variant="hero" size="sm" className="gap-2" onClick={() => handleCheckIn(club.id)}>
+                        <CheckCircle2 className="w-4 h-4" /> Check In
+                      </Button>
+                    </div>
                     <div className="mb-6">
                       <LocationMap address={`${club.location}, ${getCountryName(club.country)}`} label={club.location} height={220} />
                     </div>
+
 
                     <div className="flex items-center gap-2 mb-4"><CalendarDays className="w-4 h-4 text-primary" /><h3 className="font-semibold">Upcoming Events</h3><Badge variant="secondary" className="text-xs">{filteredEvents.length}</Badge></div>
 
