@@ -10,12 +10,13 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
-  User, Shield, MapPin, Dumbbell, Upload, AlertCircle, Copy, Check, Loader2,
+  User, Shield, MapPin, Dumbbell, Upload, AlertCircle, Copy, Check, Loader2, Flame, Activity,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { useWallet } from '@/hooks/useWallet';
 import { useProfile } from '@/hooks/useProfile';
+import { useActivities } from '@/hooks/useActivities';
 
 const fitnessGoals = [
   'Weight Loss', 'Muscle Gain', 'Endurance', 'Flexibility',
@@ -31,6 +32,7 @@ export default function ProfilePage() {
   const { isAuthenticated, login, displayIdentity } = useAuth();
   const { address, shortAddress, hasEmbeddedWallet } = useWallet();
   const { profile, loading, saving, save } = useProfile();
+  const { streak } = useActivities(7);
 
   const [copied, setCopied] = useState(false);
   const [fullName, setFullName] = useState('');
@@ -140,6 +142,27 @@ export default function ProfilePage() {
                 </Button>
               )}
             </div>
+          </CardContent>
+        </Card>
+
+        <Card className="gradient-card border-border/50 mb-6">
+          <CardContent className="p-6 flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-xl bg-warning/15 flex items-center justify-center">
+                <Flame className="w-7 h-7 text-warning" />
+              </div>
+              <div>
+                <h3 className="font-display font-semibold text-lg">
+                  {streak?.current_streak ?? 0} day streak
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Longest {streak?.longest_streak ?? 0} · {streak?.total_sessions ?? 0} total sessions
+                </p>
+              </div>
+            </div>
+            <Button variant="outline" size="sm" className="gap-2" onClick={() => (window.location.href = '/activity')}>
+              <Activity className="w-4 h-4" /> View activity
+            </Button>
           </CardContent>
         </Card>
 

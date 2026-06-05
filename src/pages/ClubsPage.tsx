@@ -7,12 +7,14 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MapPin, Calendar, Clock, Users, Search, Wallet, Building2, Dumbbell, CalendarDays, Globe } from 'lucide-react';
+import { MapPin, Calendar, Clock, Users, Search, Wallet, Building2, Dumbbell, CalendarDays, Globe, CheckCircle2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { useExchangeRates, convertToLocalCurrency, formatLocalCurrency } from '@/hooks/useExchangeRates';
 import { COUNTRIES, getCountryName } from '@/lib/countries';
 import { useSelectedCountry } from '@/hooks/useSelectedCountry';
 import { LocationMap } from '@/components/maps/LocationMap';
+import { useActivities } from '@/hooks/useActivities';
+import { useAuth } from '@/hooks/useAuth';
 
 const mockClubs = [
   {
@@ -65,6 +67,14 @@ export default function ClubsPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const { selectedCountry, setSelectedCountry } = useSelectedCountry();
   const { data: rates } = useExchangeRates();
+  const { isAuthenticated, login } = useAuth();
+  const { checkin, checkins } = useActivities(30);
+
+  const handleCheckIn = async (clubId: string) => {
+    if (!isAuthenticated) { login(); return; }
+    await checkin({ club_id: null }).catch(() => {});
+  };
+  const visitsFor = (_clubId: string) => checkins.length;
 
   const filteredClubs = mockClubs.filter((club) => {
     const matchesSearch = club.name.toLowerCase().includes(searchQuery.toLowerCase()) || club.location.toLowerCase().includes(searchQuery.toLowerCase());
@@ -164,9 +174,19 @@ export default function ClubsPage() {
                   </CardHeader>
 
                   <CardContent className="pt-0">
+                    <div className="mb-4 flex flex-wrap items-center justify-between gap-3 p-3 rounded-lg bg-primary/5 border border-primary/20">
+                      <div>
+                        <p className="text-sm font-semibold">Gym check-in</p>
+                        <p className="text-xs text-muted-foreground">Verified visits keep your streak alive</p>
+                      </div>
+                      <Button variant="hero" size="sm" className="gap-2" onClick={() => handleCheckIn(club.id)}>
+                        <CheckCircle2 className="w-4 h-4" /> Check In
+                      </Button>
+                    </div>
                     <div className="mb-6">
                       <LocationMap address={`${club.location}, ${getCountryName(club.country)}`} label={club.location} height={220} />
                     </div>
+
 
                     <div className="flex items-center gap-2 mb-4"><CalendarDays className="w-4 h-4 text-primary" /><h3 className="font-semibold">Upcoming Events</h3><Badge variant="secondary" className="text-xs">{filteredEvents.length}</Badge></div>
 
