@@ -178,35 +178,36 @@ export default function ActivityPage() {
         </motion.div>
 
 
-        <div className="grid md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
           <Card className="gradient-card border-border/50">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2"><Footprints className="w-5 h-5 text-primary" /><span className="text-sm text-muted-foreground">Today's steps</span></div>
                 <span className="text-xs text-muted-foreground">{stepPct}%</span>
               </div>
-              <div className="font-display text-3xl font-bold mb-2">{todaySteps.toLocaleString()}</div>
+              <div className="font-display text-2xl sm:text-3xl font-bold mb-2">{todaySteps.toLocaleString()}</div>
               <Progress value={stepPct} />
               <p className="text-xs text-muted-foreground mt-2">Goal {STEP_GOAL.toLocaleString()}</p>
             </CardContent>
           </Card>
 
           <Card className="gradient-card border-border/50">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-2 mb-3"><Flame className="w-5 h-5 text-warning" /><span className="text-sm text-muted-foreground">Current streak</span></div>
-              <div className="font-display text-3xl font-bold mb-1">{streak?.current_streak ?? 0} <span className="text-base font-normal text-muted-foreground">days</span></div>
+              <div className="font-display text-2xl sm:text-3xl font-bold mb-1">{streak?.current_streak ?? 0} <span className="text-base font-normal text-muted-foreground">days</span></div>
               <p className="text-xs text-muted-foreground">Longest: {streak?.longest_streak ?? 0} · Total sessions: {streak?.total_sessions ?? 0}</p>
             </CardContent>
           </Card>
 
           <Card className="gradient-card border-border/50">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-2 mb-3"><Heart className="w-5 h-5 text-destructive" /><span className="text-sm text-muted-foreground">Today's effort</span></div>
-              <div className="font-display text-3xl font-bold mb-1">{todayMinutes} <span className="text-base font-normal text-muted-foreground">min</span></div>
+              <div className="font-display text-2xl sm:text-3xl font-bold mb-1">{todayMinutes} <span className="text-base font-normal text-muted-foreground">min</span></div>
               <p className="text-xs text-muted-foreground">{todayCalories.toLocaleString()} kcal burned</p>
             </CardContent>
           </Card>
         </div>
+
 
         <Card className="gradient-card border-border/50 mb-6">
           <CardHeader><CardTitle className="font-display flex items-center gap-2"><Activity className="w-5 h-5" /> This week</CardTitle></CardHeader>
