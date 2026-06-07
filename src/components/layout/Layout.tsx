@@ -12,7 +12,7 @@ export function Layout({ children, showHeader = true, showFooter = true }: Layou
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {showHeader && <Header />}
-      <main className={`flex-1 ${showHeader ? 'pt-28 xl:pt-20' : ''}`}>
+      <main className={`flex-1 ${showHeader ? 'pt-[120px] xl:pt-20' : ''}`}>
         {children}
       </main>
       {showFooter && <Footer />}
