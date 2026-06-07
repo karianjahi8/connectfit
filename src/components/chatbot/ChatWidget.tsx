@@ -52,14 +52,14 @@ export function ChatWidget() {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            className="fixed bottom-6 right-6 z-50"
+            className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40"
           >
             <Button
               onClick={() => setIsOpen(true)}
-              className="w-14 h-14 rounded-full shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground"
               size="icon"
             >
-              <MessageCircle className="w-6 h-6" />
+              <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" />
             </Button>
             {/* Pulse indicator */}
             <span className="absolute -top-1 -right-1 flex h-4 w-4">
@@ -78,7 +78,7 @@ export function ChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-3rem)] h-[520px] max-h-[calc(100vh-6rem)] flex flex-col rounded-2xl border border-border/50 bg-card shadow-2xl overflow-hidden"
+            className="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-50 sm:w-[380px] sm:max-w-[calc(100vw-3rem)] h-[70vh] sm:h-[520px] max-h-[calc(100vh-6rem)] flex flex-col rounded-2xl border border-border/50 bg-card shadow-2xl overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-border/50 bg-primary text-primary-foreground">
