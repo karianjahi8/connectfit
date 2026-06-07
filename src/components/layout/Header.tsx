@@ -65,15 +65,15 @@ export function Header() {
           </nav>
 
           {/* Auth & Cart */}
-          <div className="flex items-center gap-3">
-            <Link to="/vendor">
-              <Button variant="ghost" size="sm" className="gap-1.5 hidden sm:flex">
+          <div className="flex items-center gap-1 sm:gap-3">
+            <Link to="/vendor" className="hidden sm:block">
+              <Button variant="ghost" size="sm" className="gap-1.5">
                 <Store className="w-4 h-4" />
                 Sell
               </Button>
             </Link>
             <Link to="/cart" className="relative">
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="h-9 w-9 sm:h-10 sm:w-10">
                 <ShoppingCart className="w-5 h-5" />
                 {cartCount > 0 && (
                   <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-[10px] gradient-primary text-primary-foreground">
