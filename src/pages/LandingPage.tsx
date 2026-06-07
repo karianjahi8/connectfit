@@ -4,6 +4,7 @@ import { Shield, Zap, Globe, Star, ArrowRight, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
+import { Layout } from '@/components/layout/Layout';
 
 const features = [
   {
