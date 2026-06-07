@@ -25,7 +25,7 @@ export function AuthButton() {
   }
 
   return (
-    <Button onClick={login} variant="hero" size="default">
+    <Button onClick={login} variant="hero" size="default" className="px-3 sm:px-6 text-sm sm:text-base whitespace-nowrap">
       Get Started
     </Button>
   );
