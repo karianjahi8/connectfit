@@ -96,24 +96,31 @@ export default function ActivityPage() {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8 max-w-5xl">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 flex items-start justify-between gap-4 flex-wrap">
+      <div className="container mx-auto px-4 py-6 sm:py-8 max-w-5xl">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div>
-            <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
+            <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2">
               My <span className="gradient-text">Activity</span>
             </h1>
-            <p className="text-muted-foreground">Steps, workouts, and your gym streak</p>
+            <p className="text-sm sm:text-base text-muted-foreground">Steps, workouts, and your gym streak</p>
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={syncFromDevice} disabled={syncing} className="gap-2">
-              {syncing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Smartphone className="w-4 h-4" />}
-              Sync from Health
-            </Button>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            {isNativeHealthAvailable() && (
+              <Button variant="outline" onClick={syncFromDevice} disabled={syncing} className="gap-2 flex-1 sm:flex-none">
+                {syncing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Smartphone className="w-4 h-4" />}
+                <span className="hidden sm:inline">Sync from Health</span>
+                <span className="sm:hidden">Sync</span>
+              </Button>
+            )}
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
-                <Button variant="hero" className="gap-2"><Plus className="w-4 h-4" /> Log activity</Button>
+                <Button variant="hero" className="gap-2 flex-1 sm:flex-none">
+                  <Plus className="w-4 h-4" />
+                  <span className="hidden sm:inline">Log activity</span>
+                  <span className="sm:hidden">Log</span>
+                </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="max-w-md w-[calc(100vw-2rem)]">
                 <DialogHeader><DialogTitle>Log activity</DialogTitle></DialogHeader>
                 <div className="space-y-4">
                   <div className="space-y-2">
@@ -170,47 +177,37 @@ export default function ActivityPage() {
           </div>
         </motion.div>
 
-        {!isNativeHealthAvailable() && (
-          <Card className="border-warning/30 bg-warning/5 mb-6">
-            <CardContent className="p-4 flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-warning shrink-0 mt-0.5" />
-              <p className="text-sm text-muted-foreground">
-                You're on the web. Install the ConnectFit mobile app to auto-sync steps & workouts from Apple Health or Health Connect.
-                For now, log activities manually or check in at a club.
-              </p>
-            </CardContent>
-          </Card>
-        )}
 
-        <div className="grid md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
           <Card className="gradient-card border-border/50">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2"><Footprints className="w-5 h-5 text-primary" /><span className="text-sm text-muted-foreground">Today's steps</span></div>
                 <span className="text-xs text-muted-foreground">{stepPct}%</span>
               </div>
-              <div className="font-display text-3xl font-bold mb-2">{todaySteps.toLocaleString()}</div>
+              <div className="font-display text-2xl sm:text-3xl font-bold mb-2">{todaySteps.toLocaleString()}</div>
               <Progress value={stepPct} />
               <p className="text-xs text-muted-foreground mt-2">Goal {STEP_GOAL.toLocaleString()}</p>
             </CardContent>
           </Card>
 
           <Card className="gradient-card border-border/50">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-2 mb-3"><Flame className="w-5 h-5 text-warning" /><span className="text-sm text-muted-foreground">Current streak</span></div>
-              <div className="font-display text-3xl font-bold mb-1">{streak?.current_streak ?? 0} <span className="text-base font-normal text-muted-foreground">days</span></div>
+              <div className="font-display text-2xl sm:text-3xl font-bold mb-1">{streak?.current_streak ?? 0} <span className="text-base font-normal text-muted-foreground">days</span></div>
               <p className="text-xs text-muted-foreground">Longest: {streak?.longest_streak ?? 0} · Total sessions: {streak?.total_sessions ?? 0}</p>
             </CardContent>
           </Card>
 
           <Card className="gradient-card border-border/50">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center gap-2 mb-3"><Heart className="w-5 h-5 text-destructive" /><span className="text-sm text-muted-foreground">Today's effort</span></div>
-              <div className="font-display text-3xl font-bold mb-1">{todayMinutes} <span className="text-base font-normal text-muted-foreground">min</span></div>
+              <div className="font-display text-2xl sm:text-3xl font-bold mb-1">{todayMinutes} <span className="text-base font-normal text-muted-foreground">min</span></div>
               <p className="text-xs text-muted-foreground">{todayCalories.toLocaleString()} kcal burned</p>
             </CardContent>
           </Card>
         </div>
+
 
         <Card className="gradient-card border-border/50 mb-6">
           <CardHeader><CardTitle className="font-display flex items-center gap-2"><Activity className="w-5 h-5" /> This week</CardTitle></CardHeader>
