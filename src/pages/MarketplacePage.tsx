@@ -56,22 +56,60 @@ export default function MarketplacePage() {
   const filtered = products.filter((p: any) => {
     const matchesSearch = !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase()) || (p.description || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCat = selectedCategories.length === 0 || selectedCategories.includes(p.category);
+    const matchesTab = activeCategoryTab === 'all' || p.category === activeCategoryTab;
     const usdcPrice = p.price_usdc ?? (rates && p.price_avax ? convertToUSDC(p.price_avax, 'AVAX', rates) : 0);
     const matchesPrice = usdcPrice <= priceRange[1];
     const matchesVerified = !verifiedOnly || p.vendor?.onchain_verified;
     const matchesRegion = !selectedCountry || p.vendor?.country === selectedCountry;
-    return matchesSearch && matchesCat && matchesPrice && matchesVerified && matchesRegion;
+    return matchesSearch && matchesCat && matchesTab && matchesPrice && matchesVerified && matchesRegion;
   });
 
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-          <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
-            <ShoppingBag className="inline-block w-8 h-8 mr-2 -mt-1" />
-            <span className="gradient-text">Marketplace</span>
-          </h1>
-          <p className="text-muted-foreground">Global fitness gear from verified merchants in {getCountryName(selectedCountry)}</p>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
+              <ShoppingBag className="inline-block w-8 h-8 mr-2 -mt-1" />
+              <span className="gradient-text">Marketplace</span>
+            </h1>
+            <p className="text-muted-foreground">Global fitness gear from verified merchants in {getCountryName(selectedCountry)}</p>
+          </div>
+          <Link to="/cart">
+            <Button variant="hero" className="gap-2 relative">
+              <ShoppingCart className="w-4 h-4" />
+              View Cart
+              {cartCount > 0 && (
+                <Badge className="ml-1 h-5 min-w-5 px-1.5 bg-background text-foreground border-0">
+                  {cartCount}
+                </Badge>
+              )}
+            </Button>
+          </Link>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="mb-6 -mx-4 px-4 overflow-x-auto"
+        >
+          <div className="flex gap-2 pb-2 min-w-max">
+            {productCategoryTabs.map(({ value, label, icon: Icon }) => {
+              const isActive = activeCategoryTab === value;
+              return (
+                <Badge
+                  key={value}
+                  variant={isActive ? 'default' : 'outline'}
+                  onClick={() => setActiveCategoryTab(value)}
+                  className={`cursor-pointer transition-all py-2 px-3 gap-1.5 text-sm ${isActive ? 'gradient-primary text-primary-foreground border-transparent' : 'hover:border-primary/50'}`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {label}
+                </Badge>
+              );
+            })}
+          </div>
         </motion.div>
 
         <div className="grid gap-4 md:grid-cols-[1fr_240px] mb-6">
