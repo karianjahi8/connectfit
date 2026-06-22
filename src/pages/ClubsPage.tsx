@@ -136,6 +136,7 @@ const categories = ['All', 'Competition', 'Class', 'Boot Camp', 'Program', 'Work
 export default function ClubsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedClubType, setSelectedClubType] = useState<string>('all');
   const { selectedCountry, setSelectedCountry } = useSelectedCountry();
   const { data: rates } = useExchangeRates();
   const { isAuthenticated, login } = useAuth();
@@ -150,7 +151,8 @@ export default function ClubsPage() {
   const filteredClubs = mockClubs.filter((club) => {
     const matchesSearch = club.name.toLowerCase().includes(searchQuery.toLowerCase()) || club.location.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCountry = club.country === selectedCountry;
-    return matchesSearch && matchesCountry;
+    const matchesType = selectedClubType === 'all' || club.type === selectedClubType;
+    return matchesSearch && matchesCountry && matchesType;
   });
 
   const getCategoryColor = (category: string) => {
