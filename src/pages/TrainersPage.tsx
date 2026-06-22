@@ -5,13 +5,25 @@ import { TrainerCard } from '@/components/trainers/TrainerCard';
 import { TrainerFilters } from '@/components/trainers/TrainerFilters';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Globe, Navigation, Loader2, X, Map as MapIcon, List } from 'lucide-react';
+import { Search, Globe, Navigation, Loader2, X, Map as MapIcon, List, Dumbbell, Trophy, Waves, Flag, Bike, HeartPulse, Sparkles } from 'lucide-react';
 import { COUNTRIES, getCountryName } from '@/lib/countries';
 import { useSelectedCountry } from '@/hooks/useSelectedCountry';
 import { useNearMe, geocodeAddress, haversineKm } from '@/hooks/useNearMe';
 import { TrainersMap } from '@/components/maps/TrainersMap';
 import { useNavigate } from 'react-router-dom';
+
+const trainerCategories = [
+  { value: 'all', label: 'All', icon: Sparkles },
+  { value: 'gym', label: 'Gym Trainers', icon: Dumbbell },
+  { value: 'athletes', label: 'Athletes', icon: Trophy },
+  { value: 'football', label: 'Football', icon: Flag },
+  { value: 'swimming', label: 'Swimming', icon: Waves },
+  { value: 'golf', label: 'Golf', icon: Flag },
+  { value: 'yoga', label: 'Yoga & Wellness', icon: HeartPulse },
+  { value: 'cycling', label: 'Cycling', icon: Bike },
+];
 
 const mockTrainers = [
   {
@@ -20,6 +32,7 @@ const mockTrainers = [
     name: 'Maya Thompson',
     bio: 'Performance coach helping busy professionals build strength, mobility, and consistency.',
     specialties: ['Strength Training', 'HIIT', 'Weight Loss'],
+    type: 'gym',
     physicalRate: 70,
     virtualRate: 40,
     location: 'New York, USA',
@@ -35,6 +48,7 @@ const mockTrainers = [
     name: 'Aisha Khan',
     bio: 'Yoga instructor and recovery specialist focused on mindfulness, posture, and flexibility.',
     specialties: ['Yoga', 'Pilates', 'Meditation'],
+    type: 'yoga',
     physicalRate: 55,
     virtualRate: 35,
     location: 'Dubai, UAE',
@@ -50,6 +64,7 @@ const mockTrainers = [
     name: 'Daniel Otieno',
     bio: 'Former athlete turned endurance coach for runners, triathletes, and hybrid fitness plans.',
     specialties: ['Sports Performance', 'Cardio', 'Endurance'],
+    type: 'athletes',
     physicalRate: 60,
     virtualRate: 38,
     location: 'Nairobi, Kenya',
@@ -65,6 +80,7 @@ const mockTrainers = [
     name: 'Lerato Mokoena',
     bio: 'Holistic trainer combining nutrition, conditioning, and sustainable lifestyle coaching.',
     specialties: ['Nutrition', 'Weight Loss', 'Lifestyle Coaching'],
+    type: 'gym',
     physicalRate: 50,
     virtualRate: 32,
     location: 'Cape Town, South Africa',
@@ -74,12 +90,77 @@ const mockTrainers = [
     totalSessions: 98,
     isVerified: false,
   },
+  {
+    id: '5',
+    walletAddress: '0x5678...9012',
+    name: 'Carlos Mendes',
+    bio: 'UEFA-licensed football coach. Tactical drills, finishing, and youth development.',
+    specialties: ['Football', 'Sports Performance', 'Agility'],
+    type: 'football',
+    physicalRate: 80,
+    virtualRate: 45,
+    location: 'Lisbon, Portugal',
+    country: 'PT',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
+    rating: 4.9,
+    totalSessions: 312,
+    isVerified: true,
+  },
+  {
+    id: '6',
+    walletAddress: '0x6789...0123',
+    name: 'Sara Lindqvist',
+    bio: 'Olympic-level swim coach. Stroke analysis, breath work, and open-water preparation.',
+    specialties: ['Swimming', 'Endurance', 'Technique'],
+    type: 'swimming',
+    physicalRate: 90,
+    virtualRate: 50,
+    location: 'Stockholm, Sweden',
+    country: 'SE',
+    avatar: 'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=150&h=150&fit=crop&crop=face',
+    rating: 4.9,
+    totalSessions: 201,
+    isVerified: true,
+  },
+  {
+    id: '7',
+    walletAddress: '0x7890...1234',
+    name: 'James Walker',
+    bio: 'PGA professional. Swing mechanics, short game, and course strategy for all levels.',
+    specialties: ['Golf', 'Swing Mechanics', 'Course Strategy'],
+    type: 'golf',
+    physicalRate: 120,
+    virtualRate: 60,
+    location: 'St Andrews, Scotland',
+    country: 'GB',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
+    rating: 4.8,
+    totalSessions: 145,
+    isVerified: true,
+  },
+  {
+    id: '8',
+    walletAddress: '0x8901...2345',
+    name: 'Marco Rossi',
+    bio: 'Pro cycling coach. Power-based training, climbing, and race-day preparation.',
+    specialties: ['Cycling', 'Endurance', 'Power'],
+    type: 'cycling',
+    physicalRate: 75,
+    virtualRate: 42,
+    location: 'Milan, Italy',
+    country: 'IT',
+    avatar: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=150&h=150&fit=crop&crop=face',
+    rating: 4.7,
+    totalSessions: 167,
+    isVerified: true,
+  },
 ];
 
 export default function TrainersPage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([]);
+  const [selectedType, setSelectedType] = useState<string>('all');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 300]);
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const { selectedCountry, setSelectedCountry } = useSelectedCountry();
@@ -87,7 +168,6 @@ export default function TrainersPage() {
   const [distances, setDistances] = useState<Record<string, number>>({});
   const [view, setView] = useState<'list' | 'map'>('list');
 
-  // When origin is set, geocode all trainer locations and compute distance.
   useEffect(() => {
     if (!origin) { setDistances({}); return; }
     let cancelled = false;
@@ -109,6 +189,7 @@ export default function TrainersPage() {
       trainer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       trainer.bio.toLowerCase().includes(searchQuery.toLowerCase()) ||
       trainer.location.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesType = selectedType === 'all' || trainer.type === selectedType;
     const matchesSpecialties =
       selectedSpecialties.length === 0 ||
       trainer.specialties.some((s) => selectedSpecialties.includes(s));
@@ -116,9 +197,8 @@ export default function TrainersPage() {
       (trainer.physicalRate >= priceRange[0] && trainer.physicalRate <= priceRange[1]) ||
       (trainer.virtualRate >= priceRange[0] && trainer.virtualRate <= priceRange[1]);
     const matchesVerified = !verifiedOnly || trainer.isVerified;
-    // When "Near me" is active, ignore country filter so global proximity works.
     const matchesCountry = origin ? true : trainer.country === selectedCountry;
-    return matchesSearch && matchesSpecialties && matchesPrice && matchesVerified && matchesCountry;
+    return matchesSearch && matchesType && matchesSpecialties && matchesPrice && matchesVerified && matchesCountry;
   });
 
   const filteredTrainers = origin
@@ -154,6 +234,30 @@ export default function TrainersPage() {
             </SelectContent>
           </Select>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="mb-6 -mx-4 px-4 overflow-x-auto"
+        >
+          <div className="flex gap-2 pb-2 min-w-max">
+            {trainerCategories.map(({ value, label, icon: Icon }) => {
+              const isActive = selectedType === value;
+              return (
+                <Badge
+                  key={value}
+                  variant={isActive ? 'default' : 'outline'}
+                  onClick={() => setSelectedType(value)}
+                  className={`cursor-pointer transition-all py-2 px-3 gap-1.5 text-sm ${isActive ? 'gradient-primary text-primary-foreground border-transparent' : 'hover:border-primary/50'}`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {label}
+                </Badge>
+              );
+            })}
+          </div>
+        </motion.div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           <motion.aside initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="lg:w-72 shrink-0">
