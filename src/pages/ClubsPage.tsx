@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MapPin, Calendar, Clock, Users, Search, Wallet, Building2, Dumbbell, CalendarDays, Globe, CheckCircle2 } from 'lucide-react';
+import { MapPin, Calendar, Clock, Users, Search, Wallet, Building2, Dumbbell, CalendarDays, Globe, CheckCircle2, HeartPulse, Flag, Footprints, Sparkles } from 'lucide-react';
 import { format } from 'date-fns';
 import { useExchangeRates, convertToLocalCurrency, formatLocalCurrency } from '@/hooks/useExchangeRates';
 import { COUNTRIES, getCountryName } from '@/lib/countries';
