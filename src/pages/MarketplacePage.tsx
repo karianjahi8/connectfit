@@ -1,16 +1,28 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { Layout } from '@/components/layout/Layout';
 import { ProductCard } from '@/components/marketplace/ProductCard';
 import { MarketplaceFilters } from '@/components/marketplace/MarketplaceFilters';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, ShoppingBag, Globe } from 'lucide-react';
+import { Search, ShoppingBag, Globe, ShoppingCart, Shirt, Dumbbell, FlaskConical, Sparkles, Headphones } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { COUNTRIES, getCountryName } from '@/lib/countries';
 import { useSelectedCountry } from '@/hooks/useSelectedCountry';
 import { useExchangeRates, convertToUSDC } from '@/hooks/useExchangeRates';
+import { useCart } from '@/hooks/useCart';
+
+const productCategoryTabs = [
+  { value: 'all', label: 'All', icon: Sparkles },
+  { value: 'gym_wear', label: 'Wears', icon: Shirt },
+  { value: 'equipment', label: 'Equipment', icon: Dumbbell },
+  { value: 'supplements', label: 'Supplements', icon: FlaskConical },
+  { value: 'accessories', label: 'Accessories', icon: Headphones },
+];
 
 export default function MarketplacePage() {
   const [searchQuery, setSearchQuery] = useState('');
