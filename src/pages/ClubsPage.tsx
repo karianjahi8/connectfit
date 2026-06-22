@@ -16,10 +16,20 @@ import { LocationMap } from '@/components/maps/LocationMap';
 import { useActivities } from '@/hooks/useActivities';
 import { useAuth } from '@/hooks/useAuth';
 
+const clubTypes = [
+  { value: 'all', label: 'All Clubs', icon: Sparkles },
+  { value: 'gym', label: 'Gym & Strength', icon: Dumbbell },
+  { value: 'wellness', label: 'Wellness Centres', icon: HeartPulse },
+  { value: 'golf', label: 'Golf Clubs', icon: Flag },
+  { value: 'football', label: 'Football Clubs', icon: Flag },
+  { value: 'running', label: 'Running Clubs', icon: Footprints },
+];
+
 const mockClubs = [
   {
     id: '1',
     name: 'Global Strength House',
+    type: 'gym',
     description: 'Performance-led fitness club with elite coaching, premium recovery spaces, and group classes.',
     location: 'Brooklyn, New York',
     country: 'US',
@@ -34,6 +44,7 @@ const mockClubs = [
   {
     id: '2',
     name: 'Coastline Fitness Club',
+    type: 'gym',
     description: 'Oceanfront training club combining indoor strength zones with outdoor conditioning.',
     location: 'Mombasa',
     country: 'KE',
@@ -47,6 +58,7 @@ const mockClubs = [
   {
     id: '3',
     name: 'Metro Wellness Center',
+    type: 'wellness',
     description: 'A holistic club experience with training, recovery, spa, and nutrition support.',
     location: 'Johannesburg',
     country: 'ZA',
@@ -56,6 +68,65 @@ const mockClubs = [
     events: [
       { id: 'e4', title: 'Marathon Prep Program', description: 'Structured endurance training for your next race.', date: '2026-04-20', time: '5:30 AM', price: 35, spots: 25, spotsRemaining: 15, category: 'Program' },
       { id: 'e5', title: 'Performance Nutrition Workshop', description: 'Practical fueling strategies for training and recovery.', date: '2026-04-12', time: '10:00 AM', price: 15, spots: 35, spotsRemaining: 20, category: 'Workshop' },
+    ],
+  },
+  {
+    id: '4',
+    name: 'Greenfield Golf & Country Club',
+    type: 'golf',
+    description: '18-hole championship course with PGA-certified coaches, practice range, and member lounges.',
+    location: 'St Andrews, Scotland',
+    country: 'GB',
+    avatar: 'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=300&h=300&fit=crop',
+    memberCount: 410,
+    walletAddress: '0x1111aaaa2222bbbb3333cccc4444dddd5555eeee',
+    events: [
+      { id: 'e6', title: 'Saturday Stableford', description: 'Friendly weekend competition open to all members and guests.', date: '2026-04-18', time: '7:30 AM', price: 30, spots: 60, spotsRemaining: 22, category: 'Competition' },
+      { id: 'e7', title: 'Short Game Clinic', description: 'Master chipping, pitching, and bunker play with a PGA pro.', date: '2026-04-14', time: '4:00 PM', price: 22, spots: 12, spotsRemaining: 5, category: 'Class' },
+    ],
+  },
+  {
+    id: '5',
+    name: 'United City FC Academy',
+    type: 'football',
+    description: 'Community football club with youth academy, adult leagues, and pro-level conditioning.',
+    location: 'Manchester',
+    country: 'GB',
+    avatar: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=300&h=300&fit=crop',
+    memberCount: 1840,
+    walletAddress: '0x2222bbbb3333cccc4444dddd5555eeee6666ffff',
+    events: [
+      { id: 'e8', title: 'Open Trials – U21 Squad', description: 'Open trials for the upcoming season. Bring boots and shin guards.', date: '2026-04-22', time: '5:00 PM', price: 10, spots: 80, spotsRemaining: 31, category: 'Competition' },
+      { id: 'e9', title: 'Tactical Masterclass', description: 'Pressing systems and build-up play, led by the first-team coach.', date: '2026-04-16', time: '6:30 PM', price: 14, spots: 40, spotsRemaining: 18, category: 'Workshop' },
+    ],
+  },
+  {
+    id: '6',
+    name: 'Sunrise Runners Collective',
+    type: 'running',
+    description: 'Inclusive running club for all paces – from couch-to-5K to marathon.',
+    location: 'Nairobi',
+    country: 'KE',
+    avatar: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=300&h=300&fit=crop',
+    memberCount: 670,
+    walletAddress: '0x3333cccc4444dddd5555eeee6666ffff7777aaaa',
+    events: [
+      { id: 'e10', title: 'Saturday Long Run', description: '15K group run with pacers for every level. Coffee after.', date: '2026-04-11', time: '6:00 AM', price: 0, spots: 100, spotsRemaining: 64, category: 'Class' },
+      { id: 'e11', title: 'Track Tuesday – Intervals', description: 'Speed session on the track. 6 x 800m with active recovery.', date: '2026-04-14', time: '6:00 PM', price: 5, spots: 50, spotsRemaining: 22, category: 'Class' },
+    ],
+  },
+  {
+    id: '7',
+    name: 'Serenity Wellness Retreat',
+    type: 'wellness',
+    description: 'Yoga, meditation, spa therapy, and nutrition under one roof.',
+    location: 'Cape Town',
+    country: 'ZA',
+    avatar: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=300&h=300&fit=crop',
+    memberCount: 320,
+    walletAddress: '0x4444dddd5555eeee6666ffff7777aaaa8888bbbb',
+    events: [
+      { id: 'e12', title: 'Sunset Yin Yoga', description: 'Slow, restorative yoga to unwind your week.', date: '2026-04-13', time: '6:30 PM', price: 16, spots: 25, spotsRemaining: 9, category: 'Class' },
     ],
   },
 ];
