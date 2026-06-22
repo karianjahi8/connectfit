@@ -196,6 +196,25 @@ export default function ClubsPage() {
             </Select>
           </div>
 
+          <div className="-mx-4 px-4 overflow-x-auto">
+            <div className="flex gap-2 pb-1 min-w-max">
+              {clubTypes.map(({ value, label, icon: Icon }) => {
+                const isActive = selectedClubType === value;
+                return (
+                  <Badge
+                    key={value}
+                    variant={isActive ? 'default' : 'outline'}
+                    onClick={() => setSelectedClubType(value)}
+                    className={`cursor-pointer transition-all py-2 px-3 gap-1.5 text-sm ${isActive ? 'gradient-primary text-primary-foreground border-transparent' : 'hover:border-primary/50'}`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    {label}
+                  </Badge>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="flex flex-wrap gap-2">
             {categories.map((category) => (
               <Badge key={category} variant={selectedCategory === category ? 'default' : 'outline'} className={`cursor-pointer transition-all ${selectedCategory === category ? 'gradient-primary text-primary-foreground' : 'hover:border-primary/50'}`} onClick={() => setSelectedCategory(category)}>
