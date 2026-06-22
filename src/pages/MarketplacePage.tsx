@@ -27,10 +27,12 @@ const productCategoryTabs = [
 export default function MarketplacePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [activeCategoryTab, setActiveCategoryTab] = useState<string>('all');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const { selectedCountry, setSelectedCountry } = useSelectedCountry();
   const { data: rates } = useExchangeRates();
+  const { cartCount } = useCart();
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['marketplace-products'],
