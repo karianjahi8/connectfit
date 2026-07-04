@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "fitconnect-mcp",
+      "version": "0.1.0",
+      "title": "FitConnect MCP"
+    },
+    "tools": [
+      {
+        "name": "platform_info",
+        "title": "About FitConnect",
+        "description": "Return an overview of FitConnect: what it does, supported categories of trainers/clubs/marketplace, currencies, and booking flow.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_products",
+        "title": "Search marketplace products",
+        "description": "Search FitConnect marketplace products (wears, equipment, supplements). Returns name, category, price in USDC, stock, and vendor id.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "description": "Optional text to match in product name/description.",
+              "type": "string"
+            },
+            "category": {
+              "description": "Optional product category filter.",
+              "type": "string",
+              "enum": [
+                "wears",
+                "equipment",
+                "supplements",
+                "apparel",
+                "accessories"
+              ]
+            },
+            "limit": {
+              "default": 20,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_vendors",
+        "title": "List FitConnect vendors",
+        "description": "List verified fitness vendors on FitConnect, optionally filtered by country or city.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "country": {
+              "type": "string"
+            },
+            "city": {
+              "type": "string"
+            },
+            "limit": {
+              "default": 20,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
