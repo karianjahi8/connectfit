@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import { VitePWA } from 'vite-plugin-pwa';
 import path from "path";
 import { componentTagger } from "lovable-tagger";
+import { mcpPlugin } from "@lovable.dev/mcp-js/stacks/supabase/vite";
 
 export default defineConfig(({ mode }) => ({
   server: {
@@ -14,6 +15,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
+    mcpPlugin(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'robots.txt', 'pwa-192.svg', 'pwa-512.svg'],
