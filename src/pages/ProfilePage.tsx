@@ -58,6 +58,47 @@ export default function ProfilePage() {
   const [experience, setExperience] = useState('');
   const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
   const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([]);
+  const [trainerCategory, setTrainerCategory] = useState<string>('');
+
+  // Registration Centre state
+  const [clubName, setClubName] = useState('');
+  const [clubCategory, setClubCategory] = useState('');
+  const [clubLocation, setClubLocation] = useState('');
+  const [clubDescription, setClubDescription] = useState('');
+  const [clubSubmitting, setClubSubmitting] = useState(false);
+
+  const [merchantName, setMerchantName] = useState('');
+  const [merchantCategory, setMerchantCategory] = useState('');
+  const [merchantEmail, setMerchantEmail] = useState('');
+  const [merchantWebsite, setMerchantWebsite] = useState('');
+  const [merchantDescription, setMerchantDescription] = useState('');
+  const [merchantSubmitting, setMerchantSubmitting] = useState(false);
+
+  const submitClubRegistration = async () => {
+    if (!clubName || !clubCategory) {
+      toast.error('Club name and category are required');
+      return;
+    }
+    setClubSubmitting(true);
+    setTimeout(() => {
+      setClubSubmitting(false);
+      toast.success('Club registration submitted for review');
+      setClubName(''); setClubCategory(''); setClubLocation(''); setClubDescription('');
+    }, 700);
+  };
+
+  const submitMerchantRegistration = async () => {
+    if (!merchantName || !merchantCategory) {
+      toast.error('Business name and category are required');
+      return;
+    }
+    setMerchantSubmitting(true);
+    setTimeout(() => {
+      setMerchantSubmitting(false);
+      toast.success('Merchant registration submitted for review');
+      setMerchantName(''); setMerchantCategory(''); setMerchantEmail(''); setMerchantWebsite(''); setMerchantDescription('');
+    }, 700);
+  };
 
   useEffect(() => {
     if (!profile) return;
