@@ -238,6 +238,148 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
 
+        {/* Registration Centre — for Trainers, Clubs & Merchants */}
+        <Card className="gradient-card border-border/50 mb-6">
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl gradient-primary flex items-center justify-center shadow-glow">
+                <Briefcase className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <div>
+                <CardTitle className="font-display">Registration Centre</CardTitle>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Join FitConnect as a provider — separate from your personal profile.
+                </p>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Tabs defaultValue="trainer-reg">
+              <TabsList className="mb-6 w-full flex flex-wrap h-auto">
+                <TabsTrigger value="trainer-reg" className="gap-2">
+                  <Dumbbell className="w-4 h-4" /> Trainer
+                </TabsTrigger>
+                <TabsTrigger value="club-reg" className="gap-2">
+                  <Building2 className="w-4 h-4" /> Club
+                </TabsTrigger>
+                <TabsTrigger value="merchant-reg" className="gap-2">
+                  <Store className="w-4 h-4" /> Merchant
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="trainer-reg" className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Register as a trainer to appear in the trainers directory. Choose your category and complete your trainer profile in the tabs below.
+                </p>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Trainer Category</Label>
+                    <Select value={trainerCategory} onValueChange={setTrainerCategory}>
+                      <SelectTrigger><SelectValue placeholder="Select a category" /></SelectTrigger>
+                      <SelectContent>
+                        {trainerCategories.map((c) => (
+                          <SelectItem key={c} value={c}>{c}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <Button
+                  variant="hero"
+                  onClick={() => { setIsTrainer(true); toast.success('Trainer mode enabled — complete your Trainer Profile below'); }}
+                  disabled={!trainerCategory}
+                >
+                  Register as Trainer
+                </Button>
+              </TabsContent>
+
+              <TabsContent value="club-reg" className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Register a fitness club, wellness centre, or sports club.
+                </p>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="club-name">Club Name</Label>
+                    <Input id="club-name" placeholder="e.g., Sunrise Wellness Centre"
+                      value={clubName} onChange={(e) => setClubName(e.target.value)} maxLength={120} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Club Category</Label>
+                    <Select value={clubCategory} onValueChange={setClubCategory}>
+                      <SelectTrigger><SelectValue placeholder="Select a category" /></SelectTrigger>
+                      <SelectContent>
+                        {clubCategories.map((c) => (
+                          <SelectItem key={c} value={c}>{c}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Location (city, country)</Label>
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input placeholder="e.g., Nairobi, Kenya" className="pl-10"
+                      value={clubLocation} onChange={(e) => setClubLocation(e.target.value)} maxLength={100} />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="club-desc">Description</Label>
+                  <Textarea id="club-desc" placeholder="What does your club offer?" className="min-h-[100px]" maxLength={500}
+                    value={clubDescription} onChange={(e) => setClubDescription(e.target.value)} />
+                </div>
+                <Button variant="hero" onClick={submitClubRegistration} disabled={clubSubmitting}>
+                  {clubSubmitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  Submit Club Registration
+                </Button>
+              </TabsContent>
+
+              <TabsContent value="merchant-reg" className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Sell wears, equipment, or supplements on the FitConnect marketplace.
+                </p>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="mer-name">Business Name</Label>
+                    <Input id="mer-name" placeholder="e.g., Peak Performance Gear"
+                      value={merchantName} onChange={(e) => setMerchantName(e.target.value)} maxLength={120} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Merchant Category</Label>
+                    <Select value={merchantCategory} onValueChange={setMerchantCategory}>
+                      <SelectTrigger><SelectValue placeholder="Select a category" /></SelectTrigger>
+                      <SelectContent>
+                        {merchantCategories.map((c) => (
+                          <SelectItem key={c} value={c}>{c}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="mer-email">Business Email</Label>
+                    <Input id="mer-email" type="email" placeholder="sales@example.com"
+                      value={merchantEmail} onChange={(e) => setMerchantEmail(e.target.value)} maxLength={255} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="mer-web">Website (optional)</Label>
+                    <Input id="mer-web" placeholder="https://..."
+                      value={merchantWebsite} onChange={(e) => setMerchantWebsite(e.target.value)} maxLength={255} />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="mer-desc">About your business</Label>
+                  <Textarea id="mer-desc" placeholder="Tell us about your products..." className="min-h-[100px]" maxLength={500}
+                    value={merchantDescription} onChange={(e) => setMerchantDescription(e.target.value)} />
+                </div>
+                <Button variant="hero" onClick={submitMerchantRegistration} disabled={merchantSubmitting}>
+                  {merchantSubmitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  Submit Merchant Registration
+                </Button>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+
         <Tabs defaultValue="basic">
           <TabsList className="mb-6">
             <TabsTrigger value="basic">Basic Info</TabsTrigger>
