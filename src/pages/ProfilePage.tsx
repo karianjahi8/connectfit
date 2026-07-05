@@ -25,6 +25,18 @@ const fitnessGoals = [
   'Sports Performance', 'General Fitness', 'Stress Relief', 'Rehabilitation',
 ];
 
+const trainerCategories = [
+  'Athletes', 'Football', 'Swimming', 'Golf', 'Gym Trainer',
+  'Yoga & Wellness', 'Running', 'Boxing', 'Cycling', 'CrossFit',
+];
+
+const clubCategories = [
+  'Wellness Centre', 'Golf Club', 'Football Club', 'Running Club',
+  'Swimming Club', 'Cycling Club', 'Boxing Gym',
+];
+
+const merchantCategories = ['Wears', 'Equipment', 'Supplements'];
+
 const trainerSpecialties = [
   'Strength Training', 'HIIT', 'Yoga', 'Pilates', 'CrossFit', 'Boxing',
   'Swimming', 'Nutrition', 'Sports Performance', 'Weight Loss', 'Bodybuilding', 'Cardio',
