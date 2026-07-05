@@ -21,15 +21,15 @@ export function haversineKm(a: Coords, b: Coords) {
 export async function geocodeAddress(address: string): Promise<Coords | null> {
   if (cache.has(address)) return cache.get(address)!;
   try {
-    const token = await getAccessToken();
-    if (!token) return null;
+    const token = await getAccessToken().catch(() => null);
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+      Authorization: `Bearer ${token ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+    };
     const res = await fetch(GEOCODE_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-        apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-      },
+      headers,
       body: JSON.stringify({ address }),
     });
     if (!res.ok) return null;
