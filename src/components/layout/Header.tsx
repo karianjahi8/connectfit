@@ -25,22 +25,24 @@ export function Header() {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50"
+      className="fixed top-0 left-0 right-0 z-50 glass border-b border-accent/15"
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
+          <Link to="/" className="flex items-center gap-3 group">
             <div className="relative">
               <img
                 src="/fitconnect-icon.png"
                 alt="FitConnect"
-                className="w-10 h-10 rounded-xl shadow-glow group-hover:scale-105 transition-transform"
+                className="w-10 h-10 rounded-xl group-hover:scale-105 transition-transform"
               />
+              <div className="absolute inset-0 rounded-xl shadow-glow opacity-70 pointer-events-none group-hover:opacity-100 transition-opacity" />
             </div>
-            <span className="font-display font-bold text-xl hidden sm:block">
-              Fit<span className="gradient-text">Connect</span>
-            </span>
+            <div className="hidden sm:flex flex-col leading-none">
+              <span className="eyebrow">FITCONNECT</span>
+              <span className="font-display font-bold text-base text-foreground">Borderless Fitness</span>
+            </div>
           </Link>
 
           {/* Navigation - Desktop */}
@@ -52,8 +54,8 @@ export function Header() {
                   <Button
                     variant="ghost"
                     className={cn(
-                      'gap-2 font-medium',
-                      isActive && 'bg-accent text-accent-foreground'
+                      'gap-2 font-medium rounded-full',
+                      isActive && 'bg-accent/15 text-accent'
                     )}
                   >
                     <Icon className="w-4 h-4" />
