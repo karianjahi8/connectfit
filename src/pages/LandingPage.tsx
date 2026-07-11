@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Shield, Zap, Globe, Star, ArrowRight, CheckCircle, Coins, BadgeCheck } from 'lucide-react';
+import { ArrowRight, Coins, Globe, Zap, BadgeCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
