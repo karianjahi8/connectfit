@@ -63,6 +63,7 @@ interface LocationMapProps {
 
 export function LocationMap({ address, label, height = 280, className }: LocationMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const mapNodeRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
@@ -83,13 +84,13 @@ export function LocationMap({ address, label, height = 280, className }: Locatio
         setCoords(data.location);
 
         await loadMapsApi();
-        if (cancelled || !containerRef.current || !window.google?.maps?.importLibrary) return;
+        if (cancelled || !mapNodeRef.current || !window.google?.maps?.importLibrary) return;
 
         const { Map } = (await window.google.maps.importLibrary('maps')) as any;
         const { Marker } = (await window.google.maps.importLibrary('marker')) as any;
 
         const center = { lat: data.location.lat, lng: data.location.lng };
-        const map = new Map(containerRef.current, {
+        const map = new Map(mapNodeRef.current, {
           center,
           zoom: 14,
           disableDefaultUI: false,
@@ -125,8 +126,9 @@ export function LocationMap({ address, label, height = 280, className }: Locatio
         style={{ height }}
         className="w-full rounded-xl overflow-hidden border border-border/50 bg-muted/30 relative"
       >
+        <div ref={mapNodeRef} className="absolute inset-0" />
         {loading && (
-          <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+          <div className="absolute inset-0 flex items-center justify-center text-muted-foreground pointer-events-none">
             <Loader2 className="w-5 h-5 animate-spin mr-2" />
             <span className="text-sm">Loading map…</span>
           </div>
