@@ -57,7 +57,8 @@ interface TrainersMapProps {
 }
 
 export function TrainersMap({ trainers, origin, height = 420, onSelect }: TrainersMapProps) {
-  const mapNodeRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const mapDivRef = useRef<HTMLDivElement | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -66,10 +67,18 @@ export function TrainersMap({ trainers, origin, height = 420, onSelect }: Traine
     setLoading(true);
     setError(null);
 
+    // Create a dedicated DOM node for Google Maps that React does NOT manage.
+    if (!wrapperRef.current) return;
+    const mapDiv = document.createElement('div');
+    mapDiv.style.width = '100%';
+    mapDiv.style.height = '100%';
+    wrapperRef.current.appendChild(mapDiv);
+    mapDivRef.current = mapDiv;
+
     (async () => {
       try {
         await loadMapsApi();
-        if (cancelled || !mapNodeRef.current || !window.google?.maps?.importLibrary) return;
+        if (cancelled) return;
         const { Map } = (await window.google.maps.importLibrary('maps')) as any;
         const { Marker } = (await window.google.maps.importLibrary('marker')) as any;
 
@@ -79,7 +88,7 @@ export function TrainersMap({ trainers, origin, height = 420, onSelect }: Traine
             return c ? { ...t, ...c } : null;
           })
         );
-        if (cancelled || !mapNodeRef.current) return;
+        if (cancelled) return;
         const valid = points.filter(Boolean) as (TrainerPoint & { lat: number; lng: number })[];
 
         const bounds = new window.google.maps.LatLngBounds();
@@ -87,7 +96,7 @@ export function TrainersMap({ trainers, origin, height = 420, onSelect }: Traine
         if (origin) bounds.extend(origin);
 
         const center = origin ?? (valid[0] ? { lat: valid[0].lat, lng: valid[0].lng } : { lat: 0, lng: 0 });
-        const map = new Map(mapNodeRef.current, {
+        const map = new Map(mapDiv, {
           center,
           zoom: 4,
           mapTypeControl: false,
@@ -126,15 +135,17 @@ export function TrainersMap({ trainers, origin, height = 420, onSelect }: Traine
 
     return () => {
       cancelled = true;
+      if (mapDiv.parentNode) mapDiv.parentNode.removeChild(mapDiv);
+      mapDivRef.current = null;
     };
   }, [trainers, origin, onSelect]);
 
   return (
     <div
+      ref={wrapperRef}
       style={{ height }}
       className="w-full rounded-xl overflow-hidden border border-border/50 bg-muted/30 relative"
     >
-      <div ref={mapNodeRef} className="absolute inset-0" />
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center text-muted-foreground bg-muted/30 pointer-events-none">
           <Loader2 className="w-5 h-5 animate-spin mr-2" />
