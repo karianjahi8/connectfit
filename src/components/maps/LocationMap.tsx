@@ -126,8 +126,9 @@ export function LocationMap({ address, label, height = 280, className }: Locatio
         style={{ height }}
         className="w-full rounded-xl overflow-hidden border border-border/50 bg-muted/30 relative"
       >
+        <div ref={mapNodeRef} className="absolute inset-0" />
         {loading && (
-          <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+          <div className="absolute inset-0 flex items-center justify-center text-muted-foreground pointer-events-none">
             <Loader2 className="w-5 h-5 animate-spin mr-2" />
             <span className="text-sm">Loading map…</span>
           </div>
