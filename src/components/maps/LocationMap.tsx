@@ -63,6 +63,7 @@ interface LocationMapProps {
 
 export function LocationMap({ address, label, height = 280, className }: LocationMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const mapNodeRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
