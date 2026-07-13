@@ -84,13 +84,13 @@ export function LocationMap({ address, label, height = 280, className }: Locatio
         setCoords(data.location);
 
         await loadMapsApi();
-        if (cancelled || !containerRef.current || !window.google?.maps?.importLibrary) return;
+        if (cancelled || !mapNodeRef.current || !window.google?.maps?.importLibrary) return;
 
         const { Map } = (await window.google.maps.importLibrary('maps')) as any;
         const { Marker } = (await window.google.maps.importLibrary('marker')) as any;
 
         const center = { lat: data.location.lat, lng: data.location.lng };
-        const map = new Map(containerRef.current, {
+        const map = new Map(mapNodeRef.current, {
           center,
           zoom: 14,
           disableDefaultUI: false,
