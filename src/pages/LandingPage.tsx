@@ -1,39 +1,67 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Coins, Globe, Zap, BadgeCheck } from 'lucide-react';
+import { ArrowRight, Dumbbell, User, Building2, Store, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import { Layout } from '@/components/layout/Layout';
-
-const features = [
-  {
-    icon: Coins,
-    title: 'Paid in USDC',
-    description: 'One stable currency for every trainer, club, and merchant — no exchange rates, no surprises.',
-  },
-  {
-    icon: Globe,
-    title: 'Borderless by design',
-    description: 'Discover coaches and clubs across 40+ countries. Local prices, global rails.',
-  },
-  {
-    icon: BadgeCheck,
-    title: 'On-chain verified',
-    description: 'Reputation, certifications, and sessions anchored on-chain. Trust you can audit.',
-  },
-  {
-    icon: Zap,
-    title: 'Mobile-first, instant',
-    description: 'Book, pay, and check in from any phone. No app store gatekeepers required.',
-  },
-];
 
 const stats = [
   { value: '500+', label: 'Verified trainers' },
   { value: '10K+', label: 'Sessions booked' },
   { value: '40+', label: 'Countries live' },
   { value: '0%', label: 'FX fees' },
+];
+
+const personas = [
+  {
+    icon: Dumbbell,
+    label: 'For Trainers',
+    title: 'Build a global coaching business',
+    benefits: [
+      'Get paid in USDC instantly across borders',
+      'Set your own rates, schedule, and session types',
+      'Earn verifiable on-chain reputation',
+      'Reach clients in 40+ countries from one profile',
+    ],
+    cta: { label: 'Become a trainer', to: '/auth' },
+  },
+  {
+    icon: User,
+    label: 'For Clients',
+    title: 'Book fitness anywhere with confidence',
+    benefits: [
+      'Discover verified trainers and clubs worldwide',
+      'See local prices, pay in stable USDC',
+      'Escrow-backed bookings protect every session',
+      'One wallet, one currency, no banking friction',
+    ],
+    cta: { label: 'Find a trainer', to: '/trainers' },
+  },
+  {
+    icon: Building2,
+    label: 'For Clubs',
+    title: 'Fill classes and simplify operations',
+    benefits: [
+      'List your gym to a global, fitness-first audience',
+      'Accept USDC payments with instant settlement',
+      'Reduce no-shows with escrow-backed bookings',
+      'Transparent cancellation and attendance tracking',
+    ],
+    cta: { label: 'List your club', to: '/auth' },
+  },
+  {
+    icon: Store,
+    label: 'For Merchants',
+    title: 'Sell fitness gear without borders',
+    benefits: [
+      'Reach international fitness customers',
+      'Receive USDC settlement, lower cross-border fees',
+      'Integrated marketplace cart and order tracking',
+      'Built for fitness commerce, not generic retail',
+    ],
+    cta: { label: 'Start selling', to: '/auth' },
+  },
 ];
 
 export default function LandingPage() {
@@ -66,11 +94,11 @@ export default function LandingPage() {
               <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold leading-[0.95] mb-6 text-balance">
                 Train smarter.
                 <br />
-                <span className="gradient-text">Powered by web3.</span>
+                <span className="gradient-text">Get paid anywhere.</span>
               </h1>
 
               <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl leading-relaxed">
-                A borderless marketplace for trainers, clubs, and fitness merchants — paid in USDC, verified on-chain, ready on any phone.
+                A borderless marketplace for trainers, clients, clubs, and fitness merchants — one stable currency, verified reputation, ready on any phone.
               </p>
 
               <motion.div
@@ -92,7 +120,6 @@ export default function LandingPage() {
                 )}
               </motion.div>
 
-              {/* USDC badges */}
               <div className="flex flex-wrap items-center gap-3 mt-8">
                 {['USDC settlement', 'No exchange rates', 'On-chain reputation', 'Installable PWA'].map((tag) => (
                   <span key={tag} className="pill border border-accent/30 text-xs font-semibold text-muted-foreground px-3 py-1.5 bg-background-secondary/60 backdrop-blur-sm">
@@ -118,60 +145,45 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* FEATURES */}
+        {/* WHAT IS IN IT FOR YOU */}
         <section className="relative py-24 lg:py-32 bg-[hsl(var(--background-secondary))]">
           <div className="absolute inset-0 circuit-bg opacity-30 pointer-events-none" />
           <div className="relative container mx-auto px-4">
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="max-w-2xl mb-16">
-              <div className="eyebrow mb-3">WHY FITCONNECT</div>
+              <div className="eyebrow mb-3">WHAT IS IN IT FOR YOU</div>
               <h2 className="font-display text-4xl md:text-5xl font-bold leading-tight text-balance">
-                Fitness without borders.
+                One platform.
                 <br />
-                <span className="gradient-text">Payments without friction.</span>
+                <span className="gradient-text">Four ways to win.</span>
               </h2>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-              {features.map((feature, i) => (
-                <motion.div key={feature.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
+            <div className="grid md:grid-cols-2 gap-5">
+              {personas.map((persona, i) => (
+                <motion.div key={persona.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
                   <Card className="h-full bg-background/60 border border-accent/15 hover:border-accent/40 rounded-2xl transition-all hover:shadow-accent-glow">
                     <CardContent className="p-6">
-                      <div className="w-12 h-12 rounded-xl bg-background-secondary border border-accent/25 flex items-center justify-center mb-5 shadow-glow">
-                        <feature.icon className="w-6 h-6 text-primary" />
+                      <div className="flex items-start justify-between gap-4 mb-5">
+                        <div className="w-12 h-12 rounded-xl bg-background-secondary border border-accent/25 flex items-center justify-center shadow-glow">
+                          <persona.icon className="w-6 h-6 text-primary" />
+                        </div>
+                        <span className="eyebrow text-xs">{persona.label}</span>
                       </div>
-                      <h3 className="font-display font-bold text-lg mb-2">{feature.title}</h3>
-                      <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* HOW IT WORKS */}
-        <section className="relative py-24 lg:py-32 bg-background">
-          <div className="container mx-auto px-4">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16 max-w-2xl mx-auto">
-              <div className="eyebrow mb-3">HOW IT WORKS</div>
-              <h2 className="font-display text-4xl md:text-5xl font-bold leading-tight text-balance">
-                Four steps. <span className="gradient-text">One global network.</span>
-              </h2>
-            </motion.div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-              {[
-                { step: '01', title: 'Join', description: 'Email, Google, Apple or phone. Your wallet is provisioned in the background.' },
-                { step: '02', title: 'Discover', description: 'Filter by country, sport, and rating — trainers, clubs, and merchants near you.' },
-                { step: '03', title: 'Pay in USDC', description: 'Stable pricing everywhere. See totals in your local currency automatically.' },
-                { step: '04', title: 'Train', description: 'Book, check in, and log sessions on-chain. Reputation follows you globally.' },
-              ].map((item, i) => (
-                <motion.div key={item.step} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
-                  <Card className="h-full bg-background-secondary/60 border border-accent/15 rounded-2xl hover:border-primary/40 transition-colors">
-                    <CardContent className="p-6">
-                      <div className="font-display text-xs tracking-widest gradient-text font-bold mb-3">STEP {item.step}</div>
-                      <h3 className="font-display font-bold text-xl mb-2">{item.title}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
+                      <h3 className="font-display font-bold text-xl mb-4">{persona.title}</h3>
+                      <ul className="space-y-3 mb-6">
+                        {persona.benefits.map((benefit) => (
+                          <li key={benefit} className="flex items-start gap-3 text-sm text-muted-foreground leading-relaxed">
+                            <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                            <span>{benefit}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <Link to={persona.cta.to}>
+                        <Button variant="outline" size="sm" className="w-full">
+                          {persona.cta.label}
+                          <ArrowRight className="w-4 h-4" />
+                        </Button>
+                      </Link>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -194,7 +206,7 @@ export default function LandingPage() {
                   <span className="gradient-text">Get paid anywhere.</span>
                 </h2>
                 <p className="text-muted-foreground max-w-2xl mx-auto mb-10">
-                  Join trainers, clubs, and merchants building the borderless fitness economy on USDC.
+                  Join trainers, clients, clubs, and merchants building the borderless fitness economy on USDC.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link to="/auth"><Button variant="hero" size="xl">Create account</Button></Link>
