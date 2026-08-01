@@ -19,6 +19,7 @@ import AuthPage from "./pages/AuthPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
 import ActivityPage from "./pages/ActivityPage";
+import WaitlistPage from "./pages/WaitlistPage";
 import NotFound from "./pages/NotFound";
 import { ChatWidget } from "./components/chatbot/ChatWidget";
 
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/activity" element={<ActivityPage />} />
+          <Route path="/waitlist" element={<WaitlistPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <ChatWidget />

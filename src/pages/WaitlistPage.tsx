@@ -243,7 +243,7 @@ export default function WaitlistPage() {
 
         {/* VALUE PROPS */}
         <section className="border-b border-border bg-[hsl(var(--background-secondary))]">
-          <div className="container mx-auto grid gap-px overflow-hidden px-4 py-14 sm:py-20 md:grid-cols-3">
+          <div className="container mx-auto grid gap-0 px-4 py-14 sm:py-20 md:grid-cols-3">
             {valueProps.map((v, i) => (
               <motion.div
                 key={v.title}
@@ -251,7 +251,7 @@ export default function WaitlistPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ delay: i * 0.08 }}
-                className="px-0 py-6 md:px-8 md:py-0 md:first:pl-0 md:not-first:border-l md:border-border"
+                className="border-t border-border pt-6 md:border-t-0 md:border-l md:pl-8 md:pt-0 md:first:border-l-0 md:first:pl-0"
               >
                 <v.icon className="h-5 w-5 text-primary" />
                 <h2 className="mt-4 font-display text-xl">{v.title}</h2>
