@@ -537,6 +537,33 @@ export type Database = {
         }
         Relationships: []
       }
+      waitlist_signups: {
+        Row: {
+          country: string | null
+          created_at: string
+          email: string
+          id: string
+          persona: string | null
+          referral_source: string | null
+        }
+        Insert: {
+          country?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          persona?: string | null
+          referral_source?: string | null
+        }
+        Update: {
+          country?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          persona?: string | null
+          referral_source?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       profiles_public: {
