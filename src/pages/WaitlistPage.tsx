@@ -40,7 +40,6 @@ import {
   StaggerItem,
 } from '@/components/motion/primitives';
 import { PhoneMockup, SCREENS, type ScreenId } from '@/components/motion/PhoneMockup';
-import { BrandLoader } from '@/components/motion/BrandLoader';
 import { ConfettiBurst } from '@/components/motion/Confetti';
 
 type Persona = 'trainer' | 'client' | 'club' | 'merchant';
@@ -326,13 +325,13 @@ function ScrollStory() {
         <div className="container relative mx-auto grid items-center gap-10 px-4 md:grid-cols-2">
           <div className="order-2 md:order-1">
             <span className="eyebrow">THE APP</span>
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="sync">
               <motion.div
                 key={active.id}
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.4, ease: EASE }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.28, ease: EASE }}
               >
                 <p className="mt-3 font-mono text-xs text-primary">{active.label}</p>
                 <h2 className="mt-2 font-display text-3xl leading-tight sm:text-4xl text-balance">{active.title}</h2>
@@ -689,12 +688,10 @@ export default function WaitlistPage() {
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
+      initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.6, ease: EASE, delay: reduced ? 0 : 0.9 }}
       className="min-h-screen bg-background"
     >
-      <BrandLoader />
       <CursorGlow />
 
       {/* Slim glass top bar */}
@@ -727,7 +724,7 @@ export default function WaitlistPage() {
                 className="eyebrow block"
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: EASE, delay: 1.0 }}
+                transition={{ duration: 0.5, ease: EASE, delay: 0.1 }}
               >
                 EARLY ACCESS · 40+ COUNTRIES
               </motion.span>
@@ -735,7 +732,7 @@ export default function WaitlistPage() {
                 className="mt-4 font-display text-4xl leading-[1.05] sm:text-5xl lg:text-6xl text-balance"
                 initial={reduced ? { opacity: 0 } : { opacity: 0, y: 28 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, ease: EASE, delay: 1.05 }}
+                transition={{ duration: 0.7, ease: EASE, delay: 0.15 }}
               >
                 Train anywhere.
                 <br />
@@ -745,7 +742,7 @@ export default function WaitlistPage() {
                 className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg"
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: EASE, delay: 1.2 }}
+                transition={{ duration: 0.6, ease: EASE, delay: 0.25 }}
               >
                 FitConnect is the borderless fitness marketplace for trainers, clients, clubs, and gear
                 merchants — one stable currency, verified reputation, instant settlement.
@@ -756,7 +753,7 @@ export default function WaitlistPage() {
                 className="mt-8 max-w-2xl scroll-mt-20"
                 initial={{ opacity: 0, scale: 0.97 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, ease: EASE, delay: 1.35 }}
+                transition={{ duration: 0.5, ease: EASE, delay: 0.35 }}
               >
                 <WaitlistForm id="hero" />
               </motion.div>
@@ -782,7 +779,7 @@ export default function WaitlistPage() {
               style={reduced ? undefined : { y: phoneY }}
               initial={reduced ? { opacity: 0 } : { opacity: 0, y: 80, rotateX: 12, rotateZ: -3 }}
               animate={{ opacity: 1, y: 0, rotateX: 0, rotateZ: 0 }}
-              transition={{ duration: 0.9, ease: EASE, delay: 1.15 }}
+              transition={{ duration: 0.9, ease: EASE, delay: 0.2 }}
             >
               <div className="relative mx-auto max-w-[420px]">
                 <PhoneMockup screen="dashboard" />
@@ -797,8 +794,8 @@ export default function WaitlistPage() {
                         : { opacity: 1, scale: 1, y: [0, c.drift, 0], x: [0, c.drift / 2, 0] }
                     }
                     transition={{
-                      opacity: { duration: 0.5, delay: 1.4 + i * 0.08 },
-                      scale: { duration: 0.5, delay: 1.4 + i * 0.08 },
+                      opacity: { duration: 0.5, delay: 0.45 + i * 0.08 },
+                      scale: { duration: 0.5, delay: 0.45 + i * 0.08 },
                       y: { duration: 7 + i, repeat: Infinity, ease: 'easeInOut' },
                       x: { duration: 9 + i, repeat: Infinity, ease: 'easeInOut' },
                     }}

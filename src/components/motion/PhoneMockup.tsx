@@ -182,13 +182,13 @@ export function PhoneMockup({ screen, className }: { screen: ScreenId; className
           <LightSweep />
           <div className="mx-auto mb-2 h-1 w-16 rounded-full bg-border" />
           <div className="relative h-[400px] overflow-hidden rounded-[1.35rem] border border-border bg-[hsl(var(--background-secondary))] p-3">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="sync">
               <motion.div
                 key={screen}
                 initial={reduced ? { opacity: 0 } : { opacity: 0, y: 14, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={reduced ? { opacity: 0 } : { opacity: 0, y: -14, scale: 0.98 }}
-                transition={{ duration: 0.45, ease: EASE }}
+                transition={{ duration: 0.28, ease: EASE }}
               >
                 <ScreenBody id={screen} />
               </motion.div>
