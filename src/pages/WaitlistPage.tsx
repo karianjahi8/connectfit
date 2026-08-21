@@ -693,7 +693,6 @@ export default function WaitlistPage() {
       transition={{ duration: 0.6, ease: EASE, delay: reduced ? 0 : 0.9 }}
       className="min-h-screen bg-background"
     >
-      <BrandLoader />
       <CursorGlow />
 
       {/* Slim glass top bar */}
