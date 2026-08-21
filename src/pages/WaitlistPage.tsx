@@ -780,7 +780,7 @@ export default function WaitlistPage() {
               style={reduced ? undefined : { y: phoneY }}
               initial={reduced ? { opacity: 0 } : { opacity: 0, y: 80, rotateX: 12, rotateZ: -3 }}
               animate={{ opacity: 1, y: 0, rotateX: 0, rotateZ: 0 }}
-              transition={{ duration: 0.9, ease: EASE, delay: 1.15 }}
+              transition={{ duration: 0.9, ease: EASE, delay: 0.2 }}
             >
               <div className="relative mx-auto max-w-[420px]">
                 <PhoneMockup screen="dashboard" />
@@ -795,8 +795,8 @@ export default function WaitlistPage() {
                         : { opacity: 1, scale: 1, y: [0, c.drift, 0], x: [0, c.drift / 2, 0] }
                     }
                     transition={{
-                      opacity: { duration: 0.5, delay: 1.4 + i * 0.08 },
-                      scale: { duration: 0.5, delay: 1.4 + i * 0.08 },
+                      opacity: { duration: 0.5, delay: 0.45 + i * 0.08 },
+                      scale: { duration: 0.5, delay: 0.45 + i * 0.08 },
                       y: { duration: 7 + i, repeat: Infinity, ease: 'easeInOut' },
                       x: { duration: 9 + i, repeat: Infinity, ease: 'easeInOut' },
                     }}
