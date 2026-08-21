@@ -725,7 +725,7 @@ export default function WaitlistPage() {
                 className="eyebrow block"
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: EASE, delay: 1.0 }}
+                transition={{ duration: 0.5, ease: EASE, delay: 0.1 }}
               >
                 EARLY ACCESS · 40+ COUNTRIES
               </motion.span>
@@ -733,7 +733,7 @@ export default function WaitlistPage() {
                 className="mt-4 font-display text-4xl leading-[1.05] sm:text-5xl lg:text-6xl text-balance"
                 initial={reduced ? { opacity: 0 } : { opacity: 0, y: 28 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, ease: EASE, delay: 1.05 }}
+                transition={{ duration: 0.7, ease: EASE, delay: 0.15 }}
               >
                 Train anywhere.
                 <br />
@@ -743,7 +743,7 @@ export default function WaitlistPage() {
                 className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg"
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: EASE, delay: 1.2 }}
+                transition={{ duration: 0.6, ease: EASE, delay: 0.25 }}
               >
                 FitConnect is the borderless fitness marketplace for trainers, clients, clubs, and gear
                 merchants — one stable currency, verified reputation, instant settlement.
@@ -754,7 +754,7 @@ export default function WaitlistPage() {
                 className="mt-8 max-w-2xl scroll-mt-20"
                 initial={{ opacity: 0, scale: 0.97 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, ease: EASE, delay: 1.35 }}
+                transition={{ duration: 0.5, ease: EASE, delay: 0.35 }}
               >
                 <WaitlistForm id="hero" />
               </motion.div>
