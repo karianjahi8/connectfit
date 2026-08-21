@@ -690,7 +690,7 @@ export default function WaitlistPage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.6, ease: EASE, delay: reduced ? 0 : 0.9 }}
+      transition={{ duration: 0.5, ease: EASE, delay: reduced ? 0 : 0.15 }}
       className="min-h-screen bg-background"
     >
       <CursorGlow />
