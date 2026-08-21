@@ -325,13 +325,13 @@ function ScrollStory() {
         <div className="container relative mx-auto grid items-center gap-10 px-4 md:grid-cols-2">
           <div className="order-2 md:order-1">
             <span className="eyebrow">THE APP</span>
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="sync">
               <motion.div
                 key={active.id}
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.4, ease: EASE }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.28, ease: EASE }}
               >
                 <p className="mt-3 font-mono text-xs text-primary">{active.label}</p>
                 <h2 className="mt-2 font-display text-3xl leading-tight sm:text-4xl text-balance">{active.title}</h2>
