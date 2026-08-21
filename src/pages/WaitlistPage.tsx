@@ -40,7 +40,6 @@ import {
   StaggerItem,
 } from '@/components/motion/primitives';
 import { PhoneMockup, SCREENS, type ScreenId } from '@/components/motion/PhoneMockup';
-import { BrandLoader } from '@/components/motion/BrandLoader';
 import { ConfettiBurst } from '@/components/motion/Confetti';
 
 type Persona = 'trainer' | 'client' | 'club' | 'merchant';
