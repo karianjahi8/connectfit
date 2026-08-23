@@ -78,12 +78,12 @@ const personas = [
 /* ---------------- Hero ---------------- */
 
 const FLOATING = [
-  { icon: Bot, label: 'AI Coach', sub: 'Plan adapted', pos: 'left-[-14%] top-[8%]', delay: 0.6 },
-  { icon: Check, label: 'Workout complete', sub: '42:18 · 312 kcal', pos: 'right-[-16%] top-[18%]', delay: 0.75 },
-  { icon: Zap, label: '+250 XP', sub: 'Level 7', pos: 'left-[-18%] top-[46%]', delay: 0.9 },
-  { icon: Apple, label: 'Nutrition', sub: '1,840 / 2,400', pos: 'right-[-14%] top-[52%]', delay: 1.05 },
-  { icon: Trophy, label: 'Challenge done', sub: '5K · 24:12', pos: 'left-[-10%] bottom-[6%]', delay: 1.2 },
-  { icon: Users, label: 'Community', sub: '3 friends joined', pos: 'right-[-12%] bottom-[10%]', delay: 1.35 },
+  { icon: Bot, label: 'AI Coach', sub: 'Plan adapted', pos: 'left-[-2%] top-[4%]', delay: 0.6 },
+  { icon: Check, label: 'Workout complete', sub: '42:18 · 312 kcal', pos: 'right-[-1%] top-[16%]', delay: 0.75 },
+  { icon: Zap, label: '+250 XP', sub: 'Level 7', pos: 'left-[-4%] top-[46%]', delay: 0.9 },
+  { icon: Apple, label: 'Nutrition', sub: '1,840 / 2,400', pos: 'right-[-3%] top-[56%]', delay: 1.05 },
+  { icon: Trophy, label: 'Challenge done', sub: '5K · 24:12', pos: 'left-[0%] bottom-[8%]', delay: 1.2 },
+  { icon: Users, label: 'Community', sub: '3 friends joined', pos: 'right-[0%] bottom-[2%]', delay: 1.35 },
 ];
 
 function FloatingCards() {
